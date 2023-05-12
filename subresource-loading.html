@@ -4,9 +4,9 @@
   <title>Subresource Loading with Web Bundles</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 71458e5bb, updated Thu Mar 9 17:18:51 2023 -0800" name="generator">
+  <meta content="Bikeshed version 3383f409d, updated Fri Apr 28 15:49:22 2023 -0700" name="generator">
   <link href="https://wicg.github.io/webpackage/subresource-loading.html" rel="canonical">
-  <meta content="84e0382c77b8abc89d5293193a4509c58f2fe778" name="document-revision">
+  <meta content="3026a4447fdbe29853ce4de23485a0f314342945" name="document-revision">
 <style>/* style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -217,8 +217,7 @@ figcaption:not(.no-marker)::before {
     position: absolute;
     z-index: 35;
     width: 20em;
-    min-width: min-content;
-    max-width: 300px;
+    width: 300px;
     height: auto;
     max-height: 500px;
     overflow: auto;
@@ -235,8 +234,15 @@ figcaption:not(.no-marker)::before {
 .dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
-.dfn-panel ul { padding: 0; }
-.dfn-panel li { list-style: inside; }
+.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
+.dfn-panel li a {
+    white-space: pre;
+    display: inline-block;
+    max-width: calc(300px - 1.5em - 1em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .dfn-panel.activated {
     display: inline-block;
     position: fixed;
@@ -247,7 +253,7 @@ figcaption:not(.no-marker)::before {
     max-height: 30vh;
 }
 
-.dfn-paneled { cursor: pointer; }
+.dfn-paneled[role="button"] { cursor: pointer; }
 </style>
 <style>/* style-issues */
 a[href].issue-return {
@@ -461,7 +467,7 @@ dfn > a.self-link::before      { content: "#"; }
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Subresource Loading with Web Bundles</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-03-10">10 March 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-05-12">12 May 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -533,7 +539,6 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#w3c-conformance"><span class="secno"></span> <span class="content">Conformance</span></a>
      <ol class="toc">
       <li><a href="#w3c-conventions"><span class="secno"></span> <span class="content">Document conventions</span></a>
-      <li><a href="#w3c-conformant-algorithms"><span class="secno"></span> <span class="content">Conformant Algorithms</span></a>
      </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
@@ -1175,20 +1180,6 @@ unlike returning a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#
     with <code>class="note"</code>,
     like this: </p>
    <p class="note" role="note">Note, this is an informative note.</p>
-   <h3 class="no-ref no-num heading settled" id="w3c-conformant-algorithms"><span class="content">Conformant Algorithms</span><a class="self-link" href="#w3c-conformant-algorithms"></a></h3>
-   <p>Requirements phrased in the imperative as part of algorithms
-    (such as "strip any leading space characters"
-    or "return false and abort these steps")
-    are to be interpreted with the meaning of the key word
-    ("must", "should", "may", etc)
-    used in introducing the algorithm. </p>
-   <p>Conformance requirements phrased as algorithms or specific steps
-    can be implemented in any manner,
-    so long as the end result is equivalent.
-    In particular, the algorithms defined in this specification
-    are intended to be easy to understand
-    and are not intended to be performant.
-    Implementers are encouraged to optimize. </p>
   </div>
 <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
@@ -1243,544 +1234,106 @@ unlike returning a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#
     </ul>
    <li><a href="#web-bundle-result">web bundle result</a><span>, in § 3</span>
   </ul>
-  <aside aria-labelledby="infopaneltitle-for-749de8b597418ff40987bd04d6748312" class="dfn-panel" data-for="749de8b597418ff40987bd04d6748312" id="infopanel-for-749de8b597418ff40987bd04d6748312">
-   <span id="infopaneltitle-for-749de8b597418ff40987bd04d6748312" style="display:none">Info about the 'report a warning to the console' external reference.</span><a href="https://console.spec.whatwg.org/#report-a-warning-to-the-console">https://console.spec.whatwg.org/#report-a-warning-to-the-console</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-report-a-warning-to-the-console">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-5bf9b3bfda1cc5bc03e6810e2acca25a" class="dfn-panel" data-for="5bf9b3bfda1cc5bc03e6810e2acca25a" id="infopanel-for-5bf9b3bfda1cc5bc03e6810e2acca25a">
-   <span id="infopaneltitle-for-5bf9b3bfda1cc5bc03e6810e2acca25a" style="display:none">Info about the 'self-origin' external reference.</span><a href="https://w3c.github.io/webappsec-csp/#policy-self-origin">https://w3c.github.io/webappsec-csp/#policy-self-origin</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-policy-self-origin">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-policy-self-origin①">5.2. Monkeypatch Does response to request match source list?</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-07886e33695d0e7b473ef18f656ad7ac" class="dfn-panel" data-for="07886e33695d0e7b473ef18f656ad7ac" id="infopanel-for-07886e33695d0e7b473ef18f656ad7ac">
-   <span id="infopaneltitle-for-07886e33695d0e7b473ef18f656ad7ac" style="display:none">Info about the 'Document' external reference.</span><a href="https://dom.spec.whatwg.org/#document">https://dom.spec.whatwg.org/#document</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-document">2. Structures</a> <a href="#ref-for-document①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" class="dfn-panel" data-for="985c42e2af63b3e74bd3b70d55668fd4" id="infopanel-for-985c42e2af63b3e74bd3b70d55668fd4">
-   <span id="infopaneltitle-for-985c42e2af63b3e74bd3b70d55668fd4" style="display:none">Info about the 'document' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-document">https://dom.spec.whatwg.org/#concept-document</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-document">2. Structures</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-15045c15505e025cd6b6d0f134b7c986" class="dfn-panel" data-for="15045c15505e025cd6b6d0f134b7c986" id="infopanel-for-15045c15505e025cd6b6d0f134b7c986">
-   <span id="infopaneltitle-for-15045c15505e025cd6b6d0f134b7c986" style="display:none">Info about the 'fire an event' external reference.</span><a href="https://dom.spec.whatwg.org/#concept-event-fire">https://dom.spec.whatwg.org/#concept-event-fire</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-event-fire">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-concept-event-fire①">3.2. Firing events</a> <a href="#ref-for-concept-event-fire②">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-dbb55ca090e46cfd7979689d43fda288" class="dfn-panel" data-for="dbb55ca090e46cfd7979689d43fda288" id="infopanel-for-dbb55ca090e46cfd7979689d43fda288">
-   <span id="infopaneltitle-for-dbb55ca090e46cfd7979689d43fda288" style="display:none">Info about the 'body' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-response-body">https://fetch.spec.whatwg.org/#concept-response-body</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-response-body">6.3. Process web bundle response</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-136f2700e84634abd2f3d42487ba7f41" class="dfn-panel" data-for="136f2700e84634abd2f3d42487ba7f41" id="infopanel-for-136f2700e84634abd2f3d42487ba7f41">
-   <span id="infopaneltitle-for-136f2700e84634abd2f3d42487ba7f41" style="display:none">Info about the 'client' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-client">https://fetch.spec.whatwg.org/#concept-request-client</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-client">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-28b697a3fde8f7519842ff0d1ae51f77" class="dfn-panel" data-for="28b697a3fde8f7519842ff0d1ae51f77" id="infopanel-for-28b697a3fde8f7519842ff0d1ae51f77">
-   <span id="infopaneltitle-for-28b697a3fde8f7519842ff0d1ae51f77" style="display:none">Info about the 'credentials mode' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-credentials-mode">https://fetch.spec.whatwg.org/#concept-request-credentials-mode</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-credentials-mode">2. Structures</a> <a href="#ref-for-concept-request-credentials-mode①">(2)</a>
-    <li><a href="#ref-for-concept-request-credentials-mode②">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-f82af8baf203f1b0578ed1442dd2d24b" class="dfn-panel" data-for="f82af8baf203f1b0578ed1442dd2d24b" id="infopanel-for-f82af8baf203f1b0578ed1442dd2d24b">
-   <span id="infopaneltitle-for-f82af8baf203f1b0578ed1442dd2d24b" style="display:none">Info about the 'current url' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-current-url">https://fetch.spec.whatwg.org/#concept-request-current-url</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-current-url">5.1. Monkeypatch Does request match source list?</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-89ba93986b2df9b70ab56597f4c96beb" class="dfn-panel" data-for="89ba93986b2df9b70ab56597f4c96beb" id="infopanel-for-89ba93986b2df9b70ab56597f4c96beb">
-   <span id="infopaneltitle-for-89ba93986b2df9b70ab56597f4c96beb" style="display:none">Info about the 'destination' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-destination">https://fetch.spec.whatwg.org/#concept-request-destination</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-destination">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-0bae0f8d0fc019614ef3bb69c15d5311" class="dfn-panel" data-for="0bae0f8d0fc019614ef3bb69c15d5311" id="infopanel-for-0bae0f8d0fc019614ef3bb69c15d5311">
-   <span id="infopaneltitle-for-0bae0f8d0fc019614ef3bb69c15d5311" style="display:none">Info about the 'fetch' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-fetch">https://fetch.spec.whatwg.org/#concept-fetch</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-fetch">4.1. Monkeypatch fetch</a>
-    <li><a href="#ref-for-concept-fetch①">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-f18da8efb12d30bbb555f747932f10bd" class="dfn-panel" data-for="f18da8efb12d30bbb555f747932f10bd" id="infopanel-for-f18da8efb12d30bbb555f747932f10bd">
-   <span id="infopaneltitle-for-f18da8efb12d30bbb555f747932f10bd" style="display:none">Info about the 'fetch params' external reference.</span><a href="https://fetch.spec.whatwg.org/#fetch-params">https://fetch.spec.whatwg.org/#fetch-params</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fetch-params">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-53971a263ceda21120399ab034745a2c" class="dfn-panel" data-for="53971a263ceda21120399ab034745a2c" id="infopanel-for-53971a263ceda21120399ab034745a2c">
-   <span id="infopaneltitle-for-53971a263ceda21120399ab034745a2c" style="display:none">Info about the 'fetch scheme' external reference.</span><a href="https://fetch.spec.whatwg.org/#fetch-scheme">https://fetch.spec.whatwg.org/#fetch-scheme</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fetch-scheme">4.2. Monkeypatch fetch scheme</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-ee7584061c2f45d6a827359cc7178423" class="dfn-panel" data-for="ee7584061c2f45d6a827359cc7178423" id="infopanel-for-ee7584061c2f45d6a827359cc7178423">
-   <span id="infopaneltitle-for-ee7584061c2f45d6a827359cc7178423" style="display:none">Info about the 'header' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-header">https://fetch.spec.whatwg.org/#concept-header</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-header">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-4fd8d1762cd9c874700296c854598fda" class="dfn-panel" data-for="4fd8d1762cd9c874700296c854598fda" id="infopanel-for-4fd8d1762cd9c874700296c854598fda">
-   <span id="infopaneltitle-for-4fd8d1762cd9c874700296c854598fda" style="display:none">Info about the 'header list' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-header-list">https://fetch.spec.whatwg.org/#concept-request-header-list</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-header-list">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-87f2d30ab2be54b6f754efb1b0c5b2e9" class="dfn-panel" data-for="87f2d30ab2be54b6f754efb1b0c5b2e9" id="infopanel-for-87f2d30ab2be54b6f754efb1b0c5b2e9">
-   <span id="infopaneltitle-for-87f2d30ab2be54b6f754efb1b0c5b2e9" style="display:none">Info about the 'http-network-or-cache fetch' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-http-network-or-cache-fetch">https://fetch.spec.whatwg.org/#concept-http-network-or-cache-fetch</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-http-network-or-cache-fetch">4.3. Monkeypatch HTTP-network-or-cache fetch</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-4dc32646bd7303074f9936174bc97436" class="dfn-panel" data-for="4dc32646bd7303074f9936174bc97436" id="infopanel-for-4dc32646bd7303074f9936174bc97436">
-   <span id="infopaneltitle-for-4dc32646bd7303074f9936174bc97436" style="display:none">Info about the 'incrementally reading' external reference.</span><a href="https://fetch.spec.whatwg.org/#body-incrementally-read">https://fetch.spec.whatwg.org/#body-incrementally-read</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-body-incrementally-read">6.3. Process web bundle response</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-731849104592df0f69027b4122c950f6" class="dfn-panel" data-for="731849104592df0f69027b4122c950f6" id="infopanel-for-731849104592df0f69027b4122c950f6">
-   <span id="infopaneltitle-for-731849104592df0f69027b4122c950f6" style="display:none">Info about the 'mode' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-mode">https://fetch.spec.whatwg.org/#concept-request-mode</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-mode">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-92488b0d05da99120fd8466a06ec480f" class="dfn-panel" data-for="92488b0d05da99120fd8466a06ec480f" id="infopanel-for-92488b0d05da99120fd8466a06ec480f">
-   <span id="infopaneltitle-for-92488b0d05da99120fd8466a06ec480f" style="display:none">Info about the 'network error' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-network-error">https://fetch.spec.whatwg.org/#concept-network-error</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-network-error">4.3. Monkeypatch HTTP-network-or-cache fetch</a> <a href="#ref-for-concept-network-error①">(2)</a>
-    <li><a href="#ref-for-concept-network-error②">6.4. Fetching subresources from a web bundle</a> <a href="#ref-for-concept-network-error③">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-4c5f8fcb3d3bc6012b505bef39f38ada" class="dfn-panel" data-for="4c5f8fcb3d3bc6012b505bef39f38ada" id="infopanel-for-4c5f8fcb3d3bc6012b505bef39f38ada">
-   <span id="infopaneltitle-for-4c5f8fcb3d3bc6012b505bef39f38ada" style="display:none">Info about the 'ok status' external reference.</span><a href="https://fetch.spec.whatwg.org/#ok-status">https://fetch.spec.whatwg.org/#ok-status</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-ok-status">6.3. Process web bundle response</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-7d473ce403179af2f3175239eb1a3fa7" class="dfn-panel" data-for="7d473ce403179af2f3175239eb1a3fa7" id="infopanel-for-7d473ce403179af2f3175239eb1a3fa7">
-   <span id="infopaneltitle-for-7d473ce403179af2f3175239eb1a3fa7" style="display:none">Info about the 'processresponse' external reference.</span><a href="https://fetch.spec.whatwg.org/#process-response">https://fetch.spec.whatwg.org/#process-response</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-process-response">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-67a1f3bce906fea0c462ad15b3222d81" class="dfn-panel" data-for="67a1f3bce906fea0c462ad15b3222d81" id="infopanel-for-67a1f3bce906fea0c462ad15b3222d81">
-   <span id="infopaneltitle-for-67a1f3bce906fea0c462ad15b3222d81" style="display:none">Info about the 'redirect count' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-redirect-count">https://fetch.spec.whatwg.org/#concept-request-redirect-count</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-redirect-count">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-concept-request-redirect-count①">5.2. Monkeypatch Does response to request match source list?</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-491791562dd138987138e7051a96c07c" class="dfn-panel" data-for="491791562dd138987138e7051a96c07c" id="infopanel-for-491791562dd138987138e7051a96c07c">
-   <span id="infopaneltitle-for-491791562dd138987138e7051a96c07c" style="display:none">Info about the 'request' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request">https://fetch.spec.whatwg.org/#concept-request</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request">6.2. Fetching a web bundle</a>
-    <li><a href="#ref-for-concept-request①">6.4. Fetching subresources from a web bundle</a>
-    <li><a href="#ref-for-concept-request②">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-d203414c2b48c23fddab90ef753bb7cf" class="dfn-panel" data-for="d203414c2b48c23fddab90ef753bb7cf" id="infopanel-for-d203414c2b48c23fddab90ef753bb7cf">
-   <span id="infopaneltitle-for-d203414c2b48c23fddab90ef753bb7cf" style="display:none">Info about the 'response' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-response">https://fetch.spec.whatwg.org/#concept-response</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-response">6.3. Process web bundle response</a>
-    <li><a href="#ref-for-concept-response①">6.4. Fetching subresources from a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-53448884e088e162bab57824ad9a7165" class="dfn-panel" data-for="53448884e088e162bab57824ad9a7165" id="infopanel-for-53448884e088e162bab57824ad9a7165">
-   <span id="infopaneltitle-for-53448884e088e162bab57824ad9a7165" style="display:none">Info about the 'service-workers mode' external reference.</span><a href="https://fetch.spec.whatwg.org/#request-service-workers-mode">https://fetch.spec.whatwg.org/#request-service-workers-mode</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-request-service-workers-mode">4.1. Monkeypatch fetch</a>
-    <li><a href="#ref-for-request-service-workers-mode①">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-1b6fecbab51caa95d9e527debe16b0b0" class="dfn-panel" data-for="1b6fecbab51caa95d9e527debe16b0b0" id="infopanel-for-1b6fecbab51caa95d9e527debe16b0b0">
-   <span id="infopaneltitle-for-1b6fecbab51caa95d9e527debe16b0b0" style="display:none">Info about the 'status' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-response-status">https://fetch.spec.whatwg.org/#concept-response-status</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-response-status">6.3. Process web bundle response</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-6f4775873c70787775f9c70f0f110709" class="dfn-panel" data-for="6f4775873c70787775f9c70f0f110709" id="infopanel-for-6f4775873c70787775f9c70f0f110709">
-   <span id="infopaneltitle-for-6f4775873c70787775f9c70f0f110709" style="display:none">Info about the 'url (for request)' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-request-url">https://fetch.spec.whatwg.org/#concept-request-url</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-request-url">6.2. Fetching a web bundle</a>
-    <li><a href="#ref-for-concept-request-url①">6.4. Fetching subresources from a web bundle</a>
-    <li><a href="#ref-for-concept-request-url②">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-3e7b167935ca300cf96cb89f946d5476" class="dfn-panel" data-for="3e7b167935ca300cf96cb89f946d5476" id="infopanel-for-3e7b167935ca300cf96cb89f946d5476">
-   <span id="infopaneltitle-for-3e7b167935ca300cf96cb89f946d5476" style="display:none">Info about the 'url (for response)' external reference.</span><a href="https://fetch.spec.whatwg.org/#concept-response-url">https://fetch.spec.whatwg.org/#concept-response-url</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-response-url">5.2. Monkeypatch Does response to request match source list?</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-257c32b9f7676f6cdb079793771ec03b" class="dfn-panel" data-for="257c32b9f7676f6cdb079793771ec03b" id="infopanel-for-257c32b9f7676f6cdb079793771ec03b">
-   <span id="infopaneltitle-for-257c32b9f7676f6cdb079793771ec03b" style="display:none">Info about the 'HTMLScriptElement' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement">https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-htmlscriptelement">3.1. Prepare the script element</a> <a href="#ref-for-htmlscriptelement①">(2)</a>
-    <li><a href="#ref-for-htmlscriptelement②">3.2. Firing events</a> <a href="#ref-for-htmlscriptelement③">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-04e6c32034490f45e4757ead7871de18" class="dfn-panel" data-for="04e6c32034490f45e4757ead7871de18" id="infopanel-for-04e6c32034490f45e4757ead7871de18">
-   <span id="infopaneltitle-for-04e6c32034490f45e4757ead7871de18" style="display:none">Info about the 'associated document' external reference.</span><a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window">https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-document-window">2. Structures</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-a76a538a2df836ba16033c492b564963" class="dfn-panel" data-for="a76a538a2df836ba16033c492b564963" id="infopanel-for-a76a538a2df836ba16033c492b564963">
-   <span id="infopaneltitle-for-a76a538a2df836ba16033c492b564963" style="display:none">Info about the 'delay the load event' external reference.</span><a href="https://html.spec.whatwg.org/#delay-the-load-event">https://html.spec.whatwg.org/#delay-the-load-event</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-delay-the-load-event">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-d815dc723d8b4fe4b1166e2013ec62b7" class="dfn-panel" data-for="d815dc723d8b4fe4b1166e2013ec62b7" id="infopanel-for-d815dc723d8b4fe4b1166e2013ec62b7">
-   <span id="infopaneltitle-for-d815dc723d8b4fe4b1166e2013ec62b7" style="display:none">Info about the 'environment settings object' external reference.</span><a href="https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-environment-settings-object">2. Structures</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-dc489a8bda2fb36c5f768ca28898c775" class="dfn-panel" data-for="dc489a8bda2fb36c5f768ca28898c775" id="infopanel-for-dc489a8bda2fb36c5f768ca28898c775">
-   <span id="infopaneltitle-for-dc489a8bda2fb36c5f768ca28898c775" style="display:none">Info about the 'execute the script element' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#execute-the-script-element">https://html.spec.whatwg.org/multipage/scripting.html#execute-the-script-element</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-execute-the-script-element">3.2. Firing events</a> <a href="#ref-for-execute-the-script-element①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-3a2763fcaa6bc82693554cf36780c0dd" class="dfn-panel" data-for="3a2763fcaa6bc82693554cf36780c0dd" id="infopanel-for-3a2763fcaa6bc82693554cf36780c0dd">
-   <span id="infopaneltitle-for-3a2763fcaa6bc82693554cf36780c0dd" style="display:none">Info about the 'in parallel' external reference.</span><a href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel">https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-in-parallel">3.1. Prepare the script element</a> <a href="#ref-for-in-parallel①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-a2eb3085d63d46de94ac5116297843ab" class="dfn-panel" data-for="a2eb3085d63d46de94ac5116297843ab" id="infopanel-for-a2eb3085d63d46de94ac5116297843ab">
-   <span id="infopaneltitle-for-a2eb3085d63d46de94ac5116297843ab" style="display:none">Info about the 'mark as ready' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#mark-as-ready">https://html.spec.whatwg.org/multipage/scripting.html#mark-as-ready</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-mark-as-ready">3.1. Prepare the script element</a> <a href="#ref-for-mark-as-ready①">(2)</a>
-    <li><a href="#ref-for-mark-as-ready②">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-566b28e53fa11b6a6ff3a9d32626c2c5" class="dfn-panel" data-for="566b28e53fa11b6a6ff3a9d32626c2c5" id="infopanel-for-566b28e53fa11b6a6ff3a9d32626c2c5">
-   <span id="infopaneltitle-for-566b28e53fa11b6a6ff3a9d32626c2c5" style="display:none">Info about the 'navigate' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate">https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-navigate">4.2. Monkeypatch fetch scheme</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-d9eea2529f915a4630198e28e209893b" class="dfn-panel" data-for="d9eea2529f915a4630198e28e209893b" id="infopanel-for-d9eea2529f915a4630198e28e209893b">
-   <span id="infopaneltitle-for-d9eea2529f915a4630198e28e209893b" style="display:none">Info about the 'prepare the script element' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#prepare-the-script-element">https://html.spec.whatwg.org/multipage/scripting.html#prepare-the-script-element</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-prepare-the-script-element">3. HTML monkeypatches</a>
-    <li><a href="#ref-for-prepare-the-script-element①">3.1. Prepare the script element</a> <a href="#ref-for-prepare-the-script-element②">(2)</a> <a href="#ref-for-prepare-the-script-element③">(3)</a> <a href="#ref-for-prepare-the-script-element④">(4)</a> <a href="#ref-for-prepare-the-script-element⑤">(5)</a> <a href="#ref-for-prepare-the-script-element⑥">(6)</a>
-    <li><a href="#ref-for-prepare-the-script-element⑦">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-d31aa23d3a807e44b5d9c8722e533f47" class="dfn-panel" data-for="d31aa23d3a807e44b5d9c8722e533f47" id="infopanel-for-d31aa23d3a807e44b5d9c8722e533f47">
-   <span id="infopaneltitle-for-d31aa23d3a807e44b5d9c8722e533f47" style="display:none">Info about the 'queue a microtask' external reference.</span><a href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-microtask">https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-microtask</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-queue-a-microtask">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-da7ed5f190c4eedd375552d6f7876301" class="dfn-panel" data-for="da7ed5f190c4eedd375552d6f7876301" id="infopanel-for-da7ed5f190c4eedd375552d6f7876301">
-   <span id="infopaneltitle-for-da7ed5f190c4eedd375552d6f7876301" style="display:none">Info about the 'queue a task' external reference.</span><a href="https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task">https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-queue-a-task">3.1. Prepare the script element</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-29cea254ad1a44f9a896265d510b7dee" class="dfn-panel" data-for="29cea254ad1a44f9a896265d510b7dee" id="infopanel-for-29cea254ad1a44f9a896265d510b7dee">
-   <span id="infopaneltitle-for-29cea254ad1a44f9a896265d510b7dee" style="display:none">Info about the 'ready to be parser-executed' external reference.</span><a href="https://html.spec.whatwg.org/multipage/scripting.html#ready-to-be-parser-executed">https://html.spec.whatwg.org/multipage/scripting.html#ready-to-be-parser-executed</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-ready-to-be-parser-executed">3.1. Prepare the script element</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-1dd34ad89f7e6a0a3e2ead5b13af8e51" class="dfn-panel" data-for="1dd34ad89f7e6a0a3e2ead5b13af8e51" id="infopanel-for-1dd34ad89f7e6a0a3e2ead5b13af8e51">
-   <span id="infopaneltitle-for-1dd34ad89f7e6a0a3e2ead5b13af8e51" style="display:none">Info about the 'report the exception' external reference.</span><a href="https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception">https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-report-the-exception">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-3bd07dd1ec2f367091cfd0df47c118a5" class="dfn-panel" data-for="3bd07dd1ec2f367091cfd0df47c118a5" id="infopanel-for-3bd07dd1ec2f367091cfd0df47c118a5">
-   <span id="infopaneltitle-for-3bd07dd1ec2f367091cfd0df47c118a5" style="display:none">Info about the 'same origin' external reference.</span><a href="https://html.spec.whatwg.org/multipage/browsers.html#same-origin">https://html.spec.whatwg.org/multipage/browsers.html#same-origin</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-same-origin">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-531b9f5023f74f77478be688e92920d8" class="dfn-panel" data-for="531b9f5023f74f77478be688e92920d8" id="infopanel-for-531b9f5023f74f77478be688e92920d8">
-   <span id="infopaneltitle-for-531b9f5023f74f77478be688e92920d8" style="display:none">Info about the 'set up a window environment settings object' external reference.</span><a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#set-up-a-window-environment-settings-object">https://html.spec.whatwg.org/multipage/nav-history-apis.html#set-up-a-window-environment-settings-object</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-set-up-a-window-environment-settings-object">2. Structures</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-df1f3e3c7c712150a2bbf279e4534061" class="dfn-panel" data-for="df1f3e3c7c712150a2bbf279e4534061" id="infopanel-for-df1f3e3c7c712150a2bbf279e4534061">
-   <span id="infopaneltitle-for-df1f3e3c7c712150a2bbf279e4534061" style="display:none">Info about the 'set up a worker environment settings object' external reference.</span><a href="https://html.spec.whatwg.org/multipage/workers.html#set-up-a-worker-environment-settings-object">https://html.spec.whatwg.org/multipage/workers.html#set-up-a-worker-environment-settings-object</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-set-up-a-worker-environment-settings-object">2. Structures</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-c98b25492f6636bddc653c579a872a41" class="dfn-panel" data-for="c98b25492f6636bddc653c579a872a41" id="infopanel-for-c98b25492f6636bddc653c579a872a41">
-   <span id="infopaneltitle-for-c98b25492f6636bddc653c579a872a41" style="display:none">Info about the 'the script's result' external reference.</span><a href="https://html.spec.whatwg.org/#concept-script-result">https://html.spec.whatwg.org/#concept-script-result</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-script-result">3. HTML monkeypatches</a>
-    <li><a href="#ref-for-concept-script-result①">3.1. Prepare the script element</a> <a href="#ref-for-concept-script-result②">(2)</a> <a href="#ref-for-concept-script-result③">(3)</a>
-    <li><a href="#ref-for-concept-script-result④">3.2. Firing events</a> <a href="#ref-for-concept-script-result⑤">(2)</a>
-    <li><a href="#ref-for-concept-script-result⑥">3.3. Removing</a> <a href="#ref-for-concept-script-result⑦">(2)</a> <a href="#ref-for-concept-script-result⑧">(3)</a> <a href="#ref-for-concept-script-result⑨">(4)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-0e039702e19fa9302a685382b608e702" class="dfn-panel" data-for="0e039702e19fa9302a685382b608e702" id="infopanel-for-0e039702e19fa9302a685382b608e702">
-   <span id="infopaneltitle-for-0e039702e19fa9302a685382b608e702" style="display:none">Info about the 'the script's type' external reference.</span><a href="https://html.spec.whatwg.org/#concept-script-type">https://html.spec.whatwg.org/#concept-script-type</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-script-type">3. HTML monkeypatches</a>
-    <li><a href="#ref-for-concept-script-type①">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-concept-script-type②">3.2. Firing events</a>
-    <li><a href="#ref-for-concept-script-type③">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fcfc8b0ed220faa237969aed00e2586d" class="dfn-panel" data-for="fcfc8b0ed220faa237969aed00e2586d" id="infopanel-for-fcfc8b0ed220faa237969aed00e2586d">
-   <span id="infopaneltitle-for-fcfc8b0ed220faa237969aed00e2586d" style="display:none">Info about the 'append' external reference.</span><a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-append">3.1. Prepare the script element</a> <a href="#ref-for-list-append①">(2)</a>
-    <li><a href="#ref-for-list-append②">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-40e03093c2abdfda29859443abc155bc" class="dfn-panel" data-for="40e03093c2abdfda29859443abc155bc" id="infopanel-for-40e03093c2abdfda29859443abc155bc">
-   <span id="infopaneltitle-for-40e03093c2abdfda29859443abc155bc" style="display:none">Info about the 'ascii case-insensitive' external reference.</span><a href="https://infra.spec.whatwg.org/#ascii-case-insensitive">https://infra.spec.whatwg.org/#ascii-case-insensitive</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-ascii-case-insensitive">3.1. Prepare the script element</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-eb75379b05abc264a531a791358e1eba" class="dfn-panel" data-for="eb75379b05abc264a531a791358e1eba" id="infopanel-for-eb75379b05abc264a531a791358e1eba">
-   <span id="infopaneltitle-for-eb75379b05abc264a531a791358e1eba" style="display:none">Info about the 'contain' external reference.</span><a href="https://infra.spec.whatwg.org/#list-contain">https://infra.spec.whatwg.org/#list-contain</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-contain">2. Structures</a>
-    <li><a href="#ref-for-list-contain①">3.3. Removing</a> <a href="#ref-for-list-contain②">(2)</a>
-    <li><a href="#ref-for-list-contain③">6.1. Parsing</a>
-    <li><a href="#ref-for-list-contain④">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-ce9efec0e74a2cbfe986593eb861ade6" class="dfn-panel" data-for="ce9efec0e74a2cbfe986593eb861ade6" id="infopanel-for-ce9efec0e74a2cbfe986593eb861ade6">
-   <span id="infopaneltitle-for-ce9efec0e74a2cbfe986593eb861ade6" style="display:none">Info about the 'continue' external reference.</span><a href="https://infra.spec.whatwg.org/#iteration-continue">https://infra.spec.whatwg.org/#iteration-continue</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-iteration-continue">6.5. Finding a matching registration</a> <a href="#ref-for-iteration-continue①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-0d3ee326a162c16997e7bb20e8b7133c" class="dfn-panel" data-for="0d3ee326a162c16997e7bb20e8b7133c" id="infopanel-for-0d3ee326a162c16997e7bb20e8b7133c">
-   <span id="infopaneltitle-for-0d3ee326a162c16997e7bb20e8b7133c" style="display:none">Info about the 'exist' external reference.</span><a href="https://infra.spec.whatwg.org/#map-exists">https://infra.spec.whatwg.org/#map-exists</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-map-exists">6.1. Parsing</a> <a href="#ref-for-map-exists①">(2)</a> <a href="#ref-for-map-exists②">(3)</a> <a href="#ref-for-map-exists③">(4)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-8b9e78ceedde26e69095bd6f6cce47bf" class="dfn-panel" data-for="8b9e78ceedde26e69095bd6f6cce47bf" id="infopanel-for-8b9e78ceedde26e69095bd6f6cce47bf">
-   <span id="infopaneltitle-for-8b9e78ceedde26e69095bd6f6cce47bf" style="display:none">Info about the 'for each' external reference.</span><a href="https://infra.spec.whatwg.org/#list-iterate">https://infra.spec.whatwg.org/#list-iterate</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-iterate">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-d2a96f8b43bc7cdf64ee04e9474e55c0" class="dfn-panel" data-for="d2a96f8b43bc7cdf64ee04e9474e55c0" id="infopanel-for-d2a96f8b43bc7cdf64ee04e9474e55c0">
-   <span id="infopaneltitle-for-d2a96f8b43bc7cdf64ee04e9474e55c0" style="display:none">Info about the 'get the keys' external reference.</span><a href="https://infra.spec.whatwg.org/#map-getting-the-keys">https://infra.spec.whatwg.org/#map-getting-the-keys</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-map-getting-the-keys">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-8f72f3d00098519c33ad2ab5758b234b" class="dfn-panel" data-for="8f72f3d00098519c33ad2ab5758b234b" id="infopanel-for-8f72f3d00098519c33ad2ab5758b234b">
-   <span id="infopaneltitle-for-8f72f3d00098519c33ad2ab5758b234b" style="display:none">Info about the 'item' external reference.</span><a href="https://infra.spec.whatwg.org/#struct-item">https://infra.spec.whatwg.org/#struct-item</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-struct-item">2. Structures</a> <a href="#ref-for-struct-item①">(2)</a> <a href="#ref-for-struct-item②">(3)</a> <a href="#ref-for-struct-item③">(4)</a>
-    <li><a href="#ref-for-struct-item④">3. HTML monkeypatches</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fafd38d2108e357bcc9a6fd7f3cd04a7" class="dfn-panel" data-for="fafd38d2108e357bcc9a6fd7f3cd04a7" id="infopanel-for-fafd38d2108e357bcc9a6fd7f3cd04a7">
-   <span id="infopaneltitle-for-fafd38d2108e357bcc9a6fd7f3cd04a7" style="display:none">Info about the 'list' external reference.</span><a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list">2. Structures</a> <a href="#ref-for-list①">(2)</a> <a href="#ref-for-list②">(3)</a> <a href="#ref-for-list③">(4)</a> <a href="#ref-for-list④">(5)</a> <a href="#ref-for-list⑤">(6)</a> <a href="#ref-for-list⑥">(7)</a>
-    <li><a href="#ref-for-list⑦">6.1. Parsing</a> <a href="#ref-for-list⑧">(2)</a> <a href="#ref-for-list⑨">(3)</a> <a href="#ref-for-list①⓪">(4)</a> <a href="#ref-for-list①①">(5)</a> <a href="#ref-for-list①②">(6)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-4bf12d0cddf322a1e2a9fb52f4d85843" class="dfn-panel" data-for="4bf12d0cddf322a1e2a9fb52f4d85843" id="infopanel-for-4bf12d0cddf322a1e2a9fb52f4d85843">
-   <span id="infopaneltitle-for-4bf12d0cddf322a1e2a9fb52f4d85843" style="display:none">Info about the 'map' external reference.</span><a href="https://infra.spec.whatwg.org/#ordered-map">https://infra.spec.whatwg.org/#ordered-map</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-ordered-map">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-4b944ac25c4d8b0b79b2296641fde4e4" class="dfn-panel" data-for="4b944ac25c4d8b0b79b2296641fde4e4" id="infopanel-for-4b944ac25c4d8b0b79b2296641fde4e4">
-   <span id="infopaneltitle-for-4b944ac25c4d8b0b79b2296641fde4e4" style="display:none">Info about the 'parse json into infra values' external reference.</span><a href="https://infra.spec.whatwg.org/#parse-a-json-string-to-an-infra-value">https://infra.spec.whatwg.org/#parse-a-json-string-to-an-infra-value</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-parse-a-json-string-to-an-infra-value">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fadc27e826887faf120674544589ae68" class="dfn-panel" data-for="fadc27e826887faf120674544589ae68" id="infopanel-for-fadc27e826887faf120674544589ae68">
-   <span id="infopaneltitle-for-fadc27e826887faf120674544589ae68" style="display:none">Info about the 'remove' external reference.</span><a href="https://infra.spec.whatwg.org/#list-remove">https://infra.spec.whatwg.org/#list-remove</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-remove">3.3. Removing</a> <a href="#ref-for-list-remove①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-40b59bc325bd4d66701dfd8b7f1847c0" class="dfn-panel" data-for="40b59bc325bd4d66701dfd8b7f1847c0" id="infopanel-for-40b59bc325bd4d66701dfd8b7f1847c0">
-   <span id="infopaneltitle-for-40b59bc325bd4d66701dfd8b7f1847c0" style="display:none">Info about the 'string' external reference.</span><a href="https://infra.spec.whatwg.org/#string">https://infra.spec.whatwg.org/#string</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-string">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-string①">6.1. Parsing</a> <a href="#ref-for-string②">(2)</a> <a href="#ref-for-string③">(3)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-3ee316b93eb2dbe81d01a666cce50f9b" class="dfn-panel" data-for="3ee316b93eb2dbe81d01a666cce50f9b" id="infopanel-for-3ee316b93eb2dbe81d01a666cce50f9b">
-   <span id="infopaneltitle-for-3ee316b93eb2dbe81d01a666cce50f9b" style="display:none">Info about the 'struct' external reference.</span><a href="https://infra.spec.whatwg.org/#struct">https://infra.spec.whatwg.org/#struct</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-struct">2. Structures</a> <a href="#ref-for-struct①">(2)</a> <a href="#ref-for-struct②">(3)</a> <a href="#ref-for-struct③">(4)</a>
-    <li><a href="#ref-for-struct④">3. HTML monkeypatches</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-eb0e1698348a5ae30cd3aa882b6dff01" class="dfn-panel" data-for="eb0e1698348a5ae30cd3aa882b6dff01" id="infopanel-for-eb0e1698348a5ae30cd3aa882b6dff01">
-   <span id="infopaneltitle-for-eb0e1698348a5ae30cd3aa882b6dff01" style="display:none">Info about the 'origin' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-origin">https://url.spec.whatwg.org/#concept-url-origin</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-url-origin">4.2. Monkeypatch fetch scheme</a>
-    <li><a href="#ref-for-concept-url-origin①">6.5. Finding a matching registration</a> <a href="#ref-for-concept-url-origin②">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-75ccf7f4179f63dff9f682d9c35046bb" class="dfn-panel" data-for="75ccf7f4179f63dff9f682d9c35046bb" id="infopanel-for-75ccf7f4179f63dff9f682d9c35046bb">
-   <span id="infopaneltitle-for-75ccf7f4179f63dff9f682d9c35046bb" style="display:none">Info about the 'path' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-path">https://url.spec.whatwg.org/#concept-url-path</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-url-path">6.5. Finding a matching registration</a> <a href="#ref-for-concept-url-path①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-67f83ca6d3c695660bfc2f054f534ffb" class="dfn-panel" data-for="67f83ca6d3c695660bfc2f054f534ffb" id="infopanel-for-67f83ca6d3c695660bfc2f054f534ffb">
-   <span id="infopaneltitle-for-67f83ca6d3c695660bfc2f054f534ffb" style="display:none">Info about the 'scheme' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-scheme">https://url.spec.whatwg.org/#concept-url-scheme</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-url-scheme">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-concept-url-scheme①">5.2. Monkeypatch Does response to request match source list?</a>
-    <li><a href="#ref-for-concept-url-scheme②">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-dcbbb02f61dd32c059296d60113d5c84" class="dfn-panel" data-for="dcbbb02f61dd32c059296d60113d5c84" id="infopanel-for-dcbbb02f61dd32c059296d60113d5c84">
-   <span id="infopaneltitle-for-dcbbb02f61dd32c059296d60113d5c84" style="display:none">Info about the 'shortening' external reference.</span><a href="https://url.spec.whatwg.org/#shorten-a-urls-path">https://url.spec.whatwg.org/#shorten-a-urls-path</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-shorten-a-urls-path">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" class="dfn-panel" data-for="fc05c76e016d3aec6a25a91c066500c8" id="infopanel-for-fc05c76e016d3aec6a25a91c066500c8">
-   <span id="infopaneltitle-for-fc05c76e016d3aec6a25a91c066500c8" style="display:none">Info about the 'url' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url">https://url.spec.whatwg.org/#concept-url</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-url">2. Structures</a> <a href="#ref-for-concept-url①">(2)</a> <a href="#ref-for-concept-url②">(3)</a> <a href="#ref-for-concept-url③">(4)</a>
-    <li><a href="#ref-for-concept-url④">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-concept-url⑤">6.1. Parsing</a> <a href="#ref-for-concept-url⑥">(2)</a>
-    <li><a href="#ref-for-concept-url⑦">6.4. Fetching subresources from a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-07df417653faafb38ece7480f2c15a3e" class="dfn-panel" data-for="07df417653faafb38ece7480f2c15a3e" id="infopanel-for-07df417653faafb38ece7480f2c15a3e">
-   <span id="infopaneltitle-for-07df417653faafb38ece7480f2c15a3e" style="display:none">Info about the 'url parser' external reference.</span><a href="https://url.spec.whatwg.org/#concept-url-parser">https://url.spec.whatwg.org/#concept-url-parser</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-url-parser">6.1. Parsing</a> <a href="#ref-for-concept-url-parser①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-3f9c3eac015894a734faa8068fd8c2a1" class="dfn-panel" data-for="3f9c3eac015894a734faa8068fd8c2a1" id="infopanel-for-3f9c3eac015894a734faa8068fd8c2a1">
-   <span id="infopaneltitle-for-3f9c3eac015894a734faa8068fd8c2a1" style="display:none">Info about the 'TypeError' external reference.</span><a href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror">https://webidl.spec.whatwg.org/#exceptiondef-typeerror</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-exceptiondef-typeerror">6.1. Parsing</a> <a href="#ref-for-exceptiondef-typeerror①">(2)</a> <a href="#ref-for-exceptiondef-typeerror②">(3)</a> <a href="#ref-for-exceptiondef-typeerror③">(4)</a> <a href="#ref-for-exceptiondef-typeerror④">(5)</a> <a href="#ref-for-exceptiondef-typeerror⑤">(6)</a>
-   </ul>
-  </aside>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
     <a data-link-type="biblio">[CONSOLE]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="749de8b597418ff40987bd04d6748312">report a warning to the console</span>
+     <li><span class="dfn-paneled" id="37e32f12">report a warning to the console</span>
     </ul>
    <li>
     <a data-link-type="biblio">[CSP]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="5bf9b3bfda1cc5bc03e6810e2acca25a">self-origin</span>
+     <li><span class="dfn-paneled" id="67296a45">self-origin</span>
     </ul>
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="07886e33695d0e7b473ef18f656ad7ac">Document</span>
-     <li><span class="dfn-paneled" id="985c42e2af63b3e74bd3b70d55668fd4">document</span>
-     <li><span class="dfn-paneled" id="15045c15505e025cd6b6d0f134b7c986">fire an event</span>
+     <li><span class="dfn-paneled" id="85394472">Document</span>
+     <li><span class="dfn-paneled" id="a973e0fe">document</span>
+     <li><span class="dfn-paneled" id="5fd23811">fire an event</span>
     </ul>
    <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="dbb55ca090e46cfd7979689d43fda288">body</span>
-     <li><span class="dfn-paneled" id="136f2700e84634abd2f3d42487ba7f41">client</span>
-     <li><span class="dfn-paneled" id="28b697a3fde8f7519842ff0d1ae51f77">credentials mode</span>
-     <li><span class="dfn-paneled" id="f82af8baf203f1b0578ed1442dd2d24b">current url</span>
-     <li><span class="dfn-paneled" id="89ba93986b2df9b70ab56597f4c96beb">destination</span>
-     <li><span class="dfn-paneled" id="0bae0f8d0fc019614ef3bb69c15d5311">fetch</span>
-     <li><span class="dfn-paneled" id="f18da8efb12d30bbb555f747932f10bd">fetch params</span>
-     <li><span class="dfn-paneled" id="53971a263ceda21120399ab034745a2c">fetch scheme</span>
-     <li><span class="dfn-paneled" id="ee7584061c2f45d6a827359cc7178423">header</span>
-     <li><span class="dfn-paneled" id="4fd8d1762cd9c874700296c854598fda">header list</span>
-     <li><span class="dfn-paneled" id="87f2d30ab2be54b6f754efb1b0c5b2e9">http-network-or-cache fetch</span>
-     <li><span class="dfn-paneled" id="4dc32646bd7303074f9936174bc97436">incrementally reading</span>
-     <li><span class="dfn-paneled" id="731849104592df0f69027b4122c950f6">mode</span>
-     <li><span class="dfn-paneled" id="92488b0d05da99120fd8466a06ec480f">network error</span>
-     <li><span class="dfn-paneled" id="4c5f8fcb3d3bc6012b505bef39f38ada">ok status</span>
-     <li><span class="dfn-paneled" id="7d473ce403179af2f3175239eb1a3fa7">processresponse</span>
-     <li><span class="dfn-paneled" id="67a1f3bce906fea0c462ad15b3222d81">redirect count</span>
-     <li><span class="dfn-paneled" id="491791562dd138987138e7051a96c07c">request</span>
-     <li><span class="dfn-paneled" id="d203414c2b48c23fddab90ef753bb7cf">response</span>
-     <li><span class="dfn-paneled" id="53448884e088e162bab57824ad9a7165">service-workers mode</span>
-     <li><span class="dfn-paneled" id="1b6fecbab51caa95d9e527debe16b0b0">status</span>
-     <li><span class="dfn-paneled" id="6f4775873c70787775f9c70f0f110709">url <small>(for request)</small></span>
-     <li><span class="dfn-paneled" id="3e7b167935ca300cf96cb89f946d5476">url <small>(for response)</small></span>
+     <li><span class="dfn-paneled" id="81a76425">body</span>
+     <li><span class="dfn-paneled" id="857d5516">client</span>
+     <li><span class="dfn-paneled" id="902380f7">credentials mode</span>
+     <li><span class="dfn-paneled" id="3f2ca4de">current url</span>
+     <li><span class="dfn-paneled" id="3ae34c95">destination</span>
+     <li><span class="dfn-paneled" id="a33db89a">fetch</span>
+     <li><span class="dfn-paneled" id="97aa4684">fetch params</span>
+     <li><span class="dfn-paneled" id="9ad93b4c">fetch scheme</span>
+     <li><span class="dfn-paneled" id="c9e7c11a">header</span>
+     <li><span class="dfn-paneled" id="6ee0eab1">header list</span>
+     <li><span class="dfn-paneled" id="980528b0">http-network-or-cache fetch</span>
+     <li><span class="dfn-paneled" id="6ef88ad8">incrementally reading</span>
+     <li><span class="dfn-paneled" id="cb98f71f">mode</span>
+     <li><span class="dfn-paneled" id="eb1b1af3">network error</span>
+     <li><span class="dfn-paneled" id="a27468c5">ok status</span>
+     <li><span class="dfn-paneled" id="bd2fe71e">processresponse</span>
+     <li><span class="dfn-paneled" id="8c3deeef">redirect count</span>
+     <li><span class="dfn-paneled" id="55213b5b">request</span>
+     <li><span class="dfn-paneled" id="ee7bba09">response</span>
+     <li><span class="dfn-paneled" id="6d1db60d">service-workers mode</span>
+     <li><span class="dfn-paneled" id="a1d47575">status</span>
+     <li><span class="dfn-paneled" id="dc1cd39b">url <small>(for request)</small></span>
+     <li><span class="dfn-paneled" id="3268a8eb">url <small>(for response)</small></span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="257c32b9f7676f6cdb079793771ec03b">HTMLScriptElement</span>
-     <li><span class="dfn-paneled" id="04e6c32034490f45e4757ead7871de18">associated document</span>
-     <li><span class="dfn-paneled" id="a76a538a2df836ba16033c492b564963">delay the load event</span>
-     <li><span class="dfn-paneled" id="d815dc723d8b4fe4b1166e2013ec62b7">environment settings object</span>
-     <li><span class="dfn-paneled" id="dc489a8bda2fb36c5f768ca28898c775">execute the script element</span>
-     <li><span class="dfn-paneled" id="3a2763fcaa6bc82693554cf36780c0dd">in parallel</span>
-     <li><span class="dfn-paneled" id="a2eb3085d63d46de94ac5116297843ab">mark as ready</span>
-     <li><span class="dfn-paneled" id="566b28e53fa11b6a6ff3a9d32626c2c5">navigate</span>
-     <li><span class="dfn-paneled" id="d9eea2529f915a4630198e28e209893b">prepare the script element</span>
-     <li><span class="dfn-paneled" id="d31aa23d3a807e44b5d9c8722e533f47">queue a microtask</span>
-     <li><span class="dfn-paneled" id="da7ed5f190c4eedd375552d6f7876301">queue a task</span>
-     <li><span class="dfn-paneled" id="29cea254ad1a44f9a896265d510b7dee">ready to be parser-executed</span>
-     <li><span class="dfn-paneled" id="1dd34ad89f7e6a0a3e2ead5b13af8e51">report the exception</span>
-     <li><span class="dfn-paneled" id="3bd07dd1ec2f367091cfd0df47c118a5">same origin</span>
-     <li><span class="dfn-paneled" id="531b9f5023f74f77478be688e92920d8">set up a window environment settings object</span>
-     <li><span class="dfn-paneled" id="df1f3e3c7c712150a2bbf279e4534061">set up a worker environment settings object</span>
-     <li><span class="dfn-paneled" id="c98b25492f6636bddc653c579a872a41">the script's result</span>
-     <li><span class="dfn-paneled" id="0e039702e19fa9302a685382b608e702">the script's type</span>
+     <li><span class="dfn-paneled" id="ec4838d8">HTMLScriptElement</span>
+     <li><span class="dfn-paneled" id="3349d69f">associated document</span>
+     <li><span class="dfn-paneled" id="c3f357e8">delay the load event</span>
+     <li><span class="dfn-paneled" id="3e12e042">environment settings object</span>
+     <li><span class="dfn-paneled" id="3327afdd">execute the script element</span>
+     <li><span class="dfn-paneled" id="a72449dd">in parallel</span>
+     <li><span class="dfn-paneled" id="2b07d94d">mark as ready</span>
+     <li><span class="dfn-paneled" id="2594e562">navigate</span>
+     <li><span class="dfn-paneled" id="037b46da">prepare the script element</span>
+     <li><span class="dfn-paneled" id="53079ce3">queue a microtask</span>
+     <li><span class="dfn-paneled" id="9a517a7d">queue a task</span>
+     <li><span class="dfn-paneled" id="1f67eee5">ready to be parser-executed</span>
+     <li><span class="dfn-paneled" id="04e154c5">report the exception</span>
+     <li><span class="dfn-paneled" id="7393da89">same origin</span>
+     <li><span class="dfn-paneled" id="66f104fd">set up a window environment settings object</span>
+     <li><span class="dfn-paneled" id="bbb5f6df">set up a worker environment settings object</span>
+     <li><span class="dfn-paneled" id="8ad9bc1a">the script's result</span>
+     <li><span class="dfn-paneled" id="4435c4d9">the script's type</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="fcfc8b0ed220faa237969aed00e2586d">append</span>
-     <li><span class="dfn-paneled" id="40e03093c2abdfda29859443abc155bc">ascii case-insensitive</span>
-     <li><span class="dfn-paneled" id="eb75379b05abc264a531a791358e1eba">contain</span>
-     <li><span class="dfn-paneled" id="ce9efec0e74a2cbfe986593eb861ade6">continue</span>
-     <li><span class="dfn-paneled" id="0d3ee326a162c16997e7bb20e8b7133c">exist</span>
-     <li><span class="dfn-paneled" id="8b9e78ceedde26e69095bd6f6cce47bf">for each</span>
-     <li><span class="dfn-paneled" id="d2a96f8b43bc7cdf64ee04e9474e55c0">get the keys</span>
-     <li><span class="dfn-paneled" id="8f72f3d00098519c33ad2ab5758b234b">item</span>
-     <li><span class="dfn-paneled" id="fafd38d2108e357bcc9a6fd7f3cd04a7">list</span>
-     <li><span class="dfn-paneled" id="4bf12d0cddf322a1e2a9fb52f4d85843">map</span>
-     <li><span class="dfn-paneled" id="4b944ac25c4d8b0b79b2296641fde4e4">parse json into infra values</span>
-     <li><span class="dfn-paneled" id="fadc27e826887faf120674544589ae68">remove</span>
-     <li><span class="dfn-paneled" id="40b59bc325bd4d66701dfd8b7f1847c0">string</span>
-     <li><span class="dfn-paneled" id="3ee316b93eb2dbe81d01a666cce50f9b">struct</span>
+     <li><span class="dfn-paneled" id="53275e46">append</span>
+     <li><span class="dfn-paneled" id="7f9469b5">ascii case-insensitive</span>
+     <li><span class="dfn-paneled" id="ae8def21">contain</span>
+     <li><span class="dfn-paneled" id="f937b7b6">continue</span>
+     <li><span class="dfn-paneled" id="1243a891">exist</span>
+     <li><span class="dfn-paneled" id="16d07e10">for each</span>
+     <li><span class="dfn-paneled" id="4e92bc80">get the keys</span>
+     <li><span class="dfn-paneled" id="c88f3887">item</span>
+     <li><span class="dfn-paneled" id="649608b9">list</span>
+     <li><span class="dfn-paneled" id="3fca5a9e">map</span>
+     <li><span class="dfn-paneled" id="8e8decb4">parse json into infra values</span>
+     <li><span class="dfn-paneled" id="99c988d6">remove</span>
+     <li><span class="dfn-paneled" id="0698d556">string</span>
+     <li><span class="dfn-paneled" id="984221ca">struct</span>
     </ul>
    <li>
     <a data-link-type="biblio">[URL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="eb0e1698348a5ae30cd3aa882b6dff01">origin</span>
-     <li><span class="dfn-paneled" id="75ccf7f4179f63dff9f682d9c35046bb">path</span>
-     <li><span class="dfn-paneled" id="67f83ca6d3c695660bfc2f054f534ffb">scheme</span>
-     <li><span class="dfn-paneled" id="dcbbb02f61dd32c059296d60113d5c84">shortening</span>
-     <li><span class="dfn-paneled" id="fc05c76e016d3aec6a25a91c066500c8">url</span>
-     <li><span class="dfn-paneled" id="07df417653faafb38ece7480f2c15a3e">url parser</span>
+     <li><span class="dfn-paneled" id="959ad97b">origin</span>
+     <li><span class="dfn-paneled" id="c0868016">path</span>
+     <li><span class="dfn-paneled" id="3a711be7">scheme</span>
+     <li><span class="dfn-paneled" id="cfb25fa2">shortening</span>
+     <li><span class="dfn-paneled" id="dcffbccd">url</span>
+     <li><span class="dfn-paneled" id="ca3ca4ae">url parser</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="3f9c3eac015894a734faa8068fd8c2a1">TypeError</span>
+     <li><span class="dfn-paneled" id="82ca3efc">TypeError</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -1820,267 +1373,68 @@ order shouldn’t be important. <a class="issue-return" href="#issue-0a9e75a1" t
   because <a data-link-type="dfn" href="#web-bundle-result">web bundle result</a> isn’t a <a href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-script">script</a>.
   This needs to wait for <a href="https://github.com/whatwg/html/issues/958">whatwg/html#958</a> before it is fixable. <a class="issue-return" href="#issue-bb807bb8" title="Jump to section">↵</a></div>
   </div>
-  <aside aria-labelledby="infopaneltitle-for-fetched-web-bundle" class="dfn-panel" data-for="fetched-web-bundle" id="infopanel-for-fetched-web-bundle">
-   <span id="infopaneltitle-for-fetched-web-bundle" style="display:none">Info about the 'fetched web bundle' definition.</span><b><a href="#fetched-web-bundle">#fetched-web-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fetched-web-bundle">2. Structures</a>
-    <li><a href="#ref-for-fetched-web-bundle①">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry" class="dfn-panel" data-for="web-bundle-fetch-entry" id="infopanel-for-web-bundle-fetch-entry">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry" style="display:none">Info about the 'web bundle fetch entry' definition.</span><b><a href="#web-bundle-fetch-entry">#web-bundle-fetch-entry</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry">2. Structures</a> <a href="#ref-for-web-bundle-fetch-entry①">(2)</a> <a href="#ref-for-web-bundle-fetch-entry②">(3)</a> <a href="#ref-for-web-bundle-fetch-entry③">(4)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry④">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-fetch-entry⑤">(2)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry⑥">6.2. Fetching a web bundle</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry⑦">6.3. Process web bundle response</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry⑧">6.4. Fetching subresources from a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry-source" class="dfn-panel" data-for="web-bundle-fetch-entry-source" id="infopanel-for-web-bundle-fetch-entry-source">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry-source" style="display:none">Info about the 'source' definition.</span><b><a href="#web-bundle-fetch-entry-source">#web-bundle-fetch-entry-source</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry-source">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-fetch-entry-source①">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-source②">(3)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-source③">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-source④">5.2. Monkeypatch Does response to request match source list?</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-source⑤">6.2. Fetching a web bundle</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-source⑥">6.5. Finding a matching registration</a> <a href="#ref-for-web-bundle-fetch-entry-source⑦">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry-credentials" class="dfn-panel" data-for="web-bundle-fetch-entry-credentials" id="infopanel-for-web-bundle-fetch-entry-credentials">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry-credentials" style="display:none">Info about the 'credentials' definition.</span><b><a href="#web-bundle-fetch-entry-credentials">#web-bundle-fetch-entry-credentials</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry-credentials">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-fetch-entry-credentials①">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-credentials②">(3)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-credentials③">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry-state" class="dfn-panel" data-for="web-bundle-fetch-entry-state" id="infopanel-for-web-bundle-fetch-entry-state">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry-state" style="display:none">Info about the 'state' definition.</span><b><a href="#web-bundle-fetch-entry-state">#web-bundle-fetch-entry-state</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry-state">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-state①">3.2. Firing events</a> <a href="#ref-for-web-bundle-fetch-entry-state②">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-state③">(3)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-state④">6.2. Fetching a web bundle</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-state⑤">6.3. Process web bundle response</a> <a href="#ref-for-web-bundle-fetch-entry-state⑥">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-state⑦">(3)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-state⑧">6.4. Fetching subresources from a web bundle</a> <a href="#ref-for-web-bundle-fetch-entry-state⑨">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-state①⓪">(3)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry-fetched-bundle" class="dfn-panel" data-for="web-bundle-fetch-entry-fetched-bundle" id="infopanel-for-web-bundle-fetch-entry-fetched-bundle">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry-fetched-bundle" style="display:none">Info about the 'fetched bundle' definition.</span><b><a href="#web-bundle-fetch-entry-fetched-bundle">#web-bundle-fetch-entry-fetched-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry-fetched-bundle">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-fetched-bundle①">3.3. Removing</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-fetched-bundle②">6.3. Process web bundle response</a> <a href="#ref-for-web-bundle-fetch-entry-fetched-bundle③">(2)</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-fetched-bundle④">6.4. Fetching subresources from a web bundle</a> <a href="#ref-for-web-bundle-fetch-entry-fetched-bundle⑤">(2)</a> <a href="#ref-for-web-bundle-fetch-entry-fetched-bundle⑥">(3)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-fetch-entry-used-by-a-registration" class="dfn-panel" data-for="web-bundle-fetch-entry-used-by-a-registration" id="infopanel-for-web-bundle-fetch-entry-used-by-a-registration">
-   <span id="infopaneltitle-for-web-bundle-fetch-entry-used-by-a-registration" style="display:none">Info about the 'used
-by a registration' definition.</span><b><a href="#web-bundle-fetch-entry-used-by-a-registration">#web-bundle-fetch-entry-used-by-a-registration</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-fetch-entry-used-by-a-registration">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-fetch-entry-used-by-a-registration①">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-bundle-rule" class="dfn-panel" data-for="bundle-rule" id="infopanel-for-bundle-rule">
-   <span id="infopaneltitle-for-bundle-rule" style="display:none">Info about the 'bundle rule' definition.</span><b><a href="#bundle-rule">#bundle-rule</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-bundle-rule">2. Structures</a> <a href="#ref-for-bundle-rule①">(2)</a>
-    <li><a href="#ref-for-bundle-rule②">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-bundle-rule-resources" class="dfn-panel" data-for="bundle-rule-resources" id="infopanel-for-bundle-rule-resources">
-   <span id="infopaneltitle-for-bundle-rule-resources" style="display:none">Info about the 'resources' definition.</span><b><a href="#bundle-rule-resources">#bundle-rule-resources</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-bundle-rule-resources">6.1. Parsing</a>
-    <li><a href="#ref-for-bundle-rule-resources①">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-bundle-rule-scopes" class="dfn-panel" data-for="bundle-rule-scopes" id="infopanel-for-bundle-rule-scopes">
-   <span id="infopaneltitle-for-bundle-rule-scopes" style="display:none">Info about the 'scopes' definition.</span><b><a href="#bundle-rule-scopes">#bundle-rule-scopes</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-bundle-rule-scopes">6.1. Parsing</a>
-    <li><a href="#ref-for-bundle-rule-scopes①">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-registration" class="dfn-panel" data-for="web-bundle-registration" id="infopanel-for-web-bundle-registration">
-   <span id="infopaneltitle-for-web-bundle-registration" style="display:none">Info about the 'web bundle registration' definition.</span><b><a href="#web-bundle-registration">#web-bundle-registration</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-registration">2. Structures</a> <a href="#ref-for-web-bundle-registration①">(2)</a> <a href="#ref-for-web-bundle-registration②">(3)</a>
-    <li><a href="#ref-for-web-bundle-registration③">3. HTML monkeypatches</a>
-    <li><a href="#ref-for-web-bundle-registration④">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-registration⑤">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-registration-fetch-entry" class="dfn-panel" data-for="web-bundle-registration-fetch-entry" id="infopanel-for-web-bundle-registration-fetch-entry">
-   <span id="infopaneltitle-for-web-bundle-registration-fetch-entry" style="display:none">Info about the 'fetch entry' definition.</span><b><a href="#web-bundle-registration-fetch-entry">#web-bundle-registration-fetch-entry</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry">2. Structures</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry①">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-registration-fetch-entry②">(2)</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry③">3.2. Firing events</a> <a href="#ref-for-web-bundle-registration-fetch-entry④">(2)</a> <a href="#ref-for-web-bundle-registration-fetch-entry⑤">(3)</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry⑥">3.3. Removing</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry⑦">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry⑧">5.2. Monkeypatch Does response to request match source list?</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry⑨">6.4. Fetching subresources from a web bundle</a>
-    <li><a href="#ref-for-web-bundle-registration-fetch-entry①⓪">6.5. Finding a matching registration</a> <a href="#ref-for-web-bundle-registration-fetch-entry①①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-registration-rule" class="dfn-panel" data-for="web-bundle-registration-rule" id="infopanel-for-web-bundle-registration-rule">
-   <span id="infopaneltitle-for-web-bundle-registration-rule" style="display:none">Info about the 'rule' definition.</span><b><a href="#web-bundle-registration-rule">#web-bundle-registration-rule</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-registration-rule">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-registration-rule①">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-parse-result" class="dfn-panel" data-for="web-bundle-parse-result" id="infopanel-for-web-bundle-parse-result">
-   <span id="infopaneltitle-for-web-bundle-parse-result" style="display:none">Info about the 'web bundle parse result' definition.</span><b><a href="#web-bundle-parse-result">#web-bundle-parse-result</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-parse-result">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-parse-result-source" class="dfn-panel" data-for="web-bundle-parse-result-source" id="infopanel-for-web-bundle-parse-result-source">
-   <span id="infopaneltitle-for-web-bundle-parse-result-source" style="display:none">Info about the 'source' definition.</span><b><a href="#web-bundle-parse-result-source">#web-bundle-parse-result-source</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-parse-result-source">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-parse-result-source①">(2)</a>
-    <li><a href="#ref-for-web-bundle-parse-result-source②">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-parse-result-credentials" class="dfn-panel" data-for="web-bundle-parse-result-credentials" id="infopanel-for-web-bundle-parse-result-credentials">
-   <span id="infopaneltitle-for-web-bundle-parse-result-credentials" style="display:none">Info about the 'credentials' definition.</span><b><a href="#web-bundle-parse-result-credentials">#web-bundle-parse-result-credentials</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-parse-result-credentials">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-parse-result-credentials①">(2)</a>
-    <li><a href="#ref-for-web-bundle-parse-result-credentials②">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-parse-result-rule" class="dfn-panel" data-for="web-bundle-parse-result-rule" id="infopanel-for-web-bundle-parse-result-rule">
-   <span id="infopaneltitle-for-web-bundle-parse-result-rule" style="display:none">Info about the 'rule' definition.</span><b><a href="#web-bundle-parse-result-rule">#web-bundle-parse-result-rule</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-parse-result-rule">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-web-bundle-parse-result-rule①">6.1. Parsing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-environment-settings-object-web-bundle-registration-list" class="dfn-panel" data-for="environment-settings-object-web-bundle-registration-list" id="infopanel-for-environment-settings-object-web-bundle-registration-list">
-   <span id="infopaneltitle-for-environment-settings-object-web-bundle-registration-list" style="display:none">Info about the 'web bundle registration list' definition.</span><b><a href="#environment-settings-object-web-bundle-registration-list">#environment-settings-object-web-bundle-registration-list</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-environment-settings-object-web-bundle-registration-list">2. Structures</a> <a href="#ref-for-environment-settings-object-web-bundle-registration-list①">(2)</a>
-    <li><a href="#ref-for-environment-settings-object-web-bundle-registration-list②">6.5. Finding a matching registration</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-document-web-bundle-registration-list" class="dfn-panel" data-for="document-web-bundle-registration-list" id="infopanel-for-document-web-bundle-registration-list">
-   <span id="infopaneltitle-for-document-web-bundle-registration-list" style="display:none">Info about the 'web bundle registration list' definition.</span><b><a href="#document-web-bundle-registration-list">#document-web-bundle-registration-list</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-document-web-bundle-registration-list">2. Structures</a> <a href="#ref-for-document-web-bundle-registration-list①">(2)</a>
-    <li><a href="#ref-for-document-web-bundle-registration-list②">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-document-web-bundle-registration-list③">3.3. Removing</a> <a href="#ref-for-document-web-bundle-registration-list④">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-document-web-bundle-fetch-entry-list" class="dfn-panel" data-for="document-web-bundle-fetch-entry-list" id="infopanel-for-document-web-bundle-fetch-entry-list">
-   <span id="infopaneltitle-for-document-web-bundle-fetch-entry-list" style="display:none">Info about the 'web bundle fetch entry list' definition.</span><b><a href="#document-web-bundle-fetch-entry-list">#document-web-bundle-fetch-entry-list</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-document-web-bundle-fetch-entry-list">2. Structures</a>
-    <li><a href="#ref-for-document-web-bundle-fetch-entry-list①">3.1. Prepare the script element</a> <a href="#ref-for-document-web-bundle-fetch-entry-list②">(2)</a>
-    <li><a href="#ref-for-document-web-bundle-fetch-entry-list③">3.3. Removing</a> <a href="#ref-for-document-web-bundle-fetch-entry-list④">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-result" class="dfn-panel" data-for="web-bundle-result" id="infopanel-for-web-bundle-result">
-   <span id="infopaneltitle-for-web-bundle-result" style="display:none">Info about the 'web bundle result' definition.</span><b><a href="#web-bundle-result">#web-bundle-result</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-result">3. HTML monkeypatches</a> <a href="#ref-for-web-bundle-result①">(2)</a>
-    <li><a href="#ref-for-web-bundle-result②">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-result③">(2)</a>
-    <li><a href="#ref-for-web-bundle-result④">3.2. Firing events</a> <a href="#ref-for-web-bundle-result⑤">(2)</a>
-    <li><a href="#ref-for-web-bundle-result⑥">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-result-registration" class="dfn-panel" data-for="web-bundle-result-registration" id="infopanel-for-web-bundle-result-registration">
-   <span id="infopaneltitle-for-web-bundle-result-registration" style="display:none">Info about the 'registration' definition.</span><b><a href="#web-bundle-result-registration">#web-bundle-result-registration</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-result-registration">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-result-registration①">(2)</a> <a href="#ref-for-web-bundle-result-registration②">(3)</a>
-    <li><a href="#ref-for-web-bundle-result-registration③">3.2. Firing events</a> <a href="#ref-for-web-bundle-result-registration④">(2)</a> <a href="#ref-for-web-bundle-result-registration⑤">(3)</a> <a href="#ref-for-web-bundle-result-registration⑥">(4)</a> <a href="#ref-for-web-bundle-result-registration⑦">(5)</a>
-    <li><a href="#ref-for-web-bundle-result-registration⑧">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-web-bundle-result-error-to-rethrow" class="dfn-panel" data-for="web-bundle-result-error-to-rethrow" id="infopanel-for-web-bundle-result-error-to-rethrow">
-   <span id="infopaneltitle-for-web-bundle-result-error-to-rethrow" style="display:none">Info about the 'error to rethrow' definition.</span><b><a href="#web-bundle-result-error-to-rethrow">#web-bundle-result-error-to-rethrow</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-web-bundle-result-error-to-rethrow">3.1. Prepare the script element</a> <a href="#ref-for-web-bundle-result-error-to-rethrow①">(2)</a>
-    <li><a href="#ref-for-web-bundle-result-error-to-rethrow②">3.2. Firing events</a> <a href="#ref-for-web-bundle-result-error-to-rethrow③">(2)</a> <a href="#ref-for-web-bundle-result-error-to-rethrow④">(3)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-prepare-a-web-bundle" class="dfn-panel" data-for="prepare-a-web-bundle" id="infopanel-for-prepare-a-web-bundle">
-   <span id="infopaneltitle-for-prepare-a-web-bundle" style="display:none">Info about the 'prepare a web bundle' definition.</span><b><a href="#prepare-a-web-bundle">#prepare-a-web-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-prepare-a-web-bundle">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-prepare-a-web-bundle①">3.3. Removing</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-process-events-for-a-web-bundle" class="dfn-panel" data-for="process-events-for-a-web-bundle" id="infopanel-for-process-events-for-a-web-bundle">
-   <span id="infopaneltitle-for-process-events-for-a-web-bundle" style="display:none">Info about the 'process events for a web bundle' definition.</span><b><a href="#process-events-for-a-web-bundle">#process-events-for-a-web-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-process-events-for-a-web-bundle">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-process-events-for-a-web-bundle①">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-parse-a-web-bundle-string" class="dfn-panel" data-for="parse-a-web-bundle-string" id="infopanel-for-parse-a-web-bundle-string">
-   <span id="infopaneltitle-for-parse-a-web-bundle-string" style="display:none">Info about the 'parse a web bundle string' definition.</span><b><a href="#parse-a-web-bundle-string">#parse-a-web-bundle-string</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-parse-a-web-bundle-string">3.1. Prepare the script element</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-parse-a-url-list" class="dfn-panel" data-for="parse-a-url-list" id="infopanel-for-parse-a-url-list">
-   <span id="infopaneltitle-for-parse-a-url-list" style="display:none">Info about the 'parse a URL list' definition.</span><b><a href="#parse-a-url-list">#parse-a-url-list</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-parse-a-url-list">6.1. Parsing</a> <a href="#ref-for-parse-a-url-list①">(2)</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fetch-a-web-bundle" class="dfn-panel" data-for="fetch-a-web-bundle" id="infopanel-for-fetch-a-web-bundle">
-   <span id="infopaneltitle-for-fetch-a-web-bundle" style="display:none">Info about the 'fetch a web bundle' definition.</span><b><a href="#fetch-a-web-bundle">#fetch-a-web-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fetch-a-web-bundle">3.1. Prepare the script element</a>
-    <li><a href="#ref-for-fetch-a-web-bundle①">3.2. Firing events</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-concept-process-web-bundle-response" class="dfn-panel" data-for="concept-process-web-bundle-response" id="infopanel-for-concept-process-web-bundle-response">
-   <span id="infopaneltitle-for-concept-process-web-bundle-response" style="display:none">Info about the 'process web bundle
-response' definition.</span><b><a href="#concept-process-web-bundle-response">#concept-process-web-bundle-response</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-concept-process-web-bundle-response">6.2. Fetching a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-fetch-a-subresource-from-web-bundle" class="dfn-panel" data-for="fetch-a-subresource-from-web-bundle" id="infopanel-for-fetch-a-subresource-from-web-bundle">
-   <span id="infopaneltitle-for-fetch-a-subresource-from-web-bundle" style="display:none">Info about the 'fetch a subresource from web bundle' definition.</span><b><a href="#fetch-a-subresource-from-web-bundle">#fetch-a-subresource-from-web-bundle</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-fetch-a-subresource-from-web-bundle">4.3. Monkeypatch HTTP-network-or-cache fetch</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-get-response-from-web-bundle-fetch-entry" class="dfn-panel" data-for="get-response-from-web-bundle-fetch-entry" id="infopanel-for-get-response-from-web-bundle-fetch-entry">
-   <span id="infopaneltitle-for-get-response-from-web-bundle-fetch-entry" style="display:none">Info about the 'get response from web bundle fetch entry' definition.</span><b><a href="#get-response-from-web-bundle-fetch-entry">#get-response-from-web-bundle-fetch-entry</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-get-response-from-web-bundle-fetch-entry">6.4. Fetching subresources from a web bundle</a>
-   </ul>
-  </aside>
-  <aside aria-labelledby="infopaneltitle-for-find-a-matching-web-bundle-registration" class="dfn-panel" data-for="find-a-matching-web-bundle-registration" id="infopanel-for-find-a-matching-web-bundle-registration">
-   <span id="infopaneltitle-for-find-a-matching-web-bundle-registration" style="display:none">Info about the 'find a matching web bundle registration' definition.</span><b><a href="#find-a-matching-web-bundle-registration">#find-a-matching-web-bundle-registration</a></b><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-find-a-matching-web-bundle-registration">4.1. Monkeypatch fetch</a>
-    <li><a href="#ref-for-find-a-matching-web-bundle-registration①">5.1. Monkeypatch Does request match source list?</a>
-    <li><a href="#ref-for-find-a-matching-web-bundle-registration②">5.2. Monkeypatch Does response to request match source list?</a>
-    <li><a href="#ref-for-find-a-matching-web-bundle-registration③">6.4. Fetching subresources from a web bundle</a>
-   </ul>
-  </aside>
 <script>/* script-dfn-panel */
 "use strict";
 {
-    function queryAll(sel) {
-        return [].slice.call(document.querySelectorAll(sel));
+    const dfnsJson = window.dfnsJson || {};
+
+    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
+        return mk.aside({
+            class: "dfn-panel",
+            id: `infopanel-for-${dfnID}`,
+            "data-for": dfnID,
+            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+            },
+            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+                `Info about the '${dfnText}' ${external?"external":""} reference.`),
+            mk.a({href:url}, url),
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({
+                                    href: `#${ref.id}`
+                                    },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
-    // Add popup behavior to all dfns to show the corresponding dfn-panel.
-    var dfns = document.querySelectorAll('.dfn-paneled');
-    for (let dfn of dfns) { insertDfnPopupAction(dfn); }
+    function genAllDfnPanels() {
+        for(const panelData of Object.values(window.dfnpanelData)) {
+            const dfnID = panelData.dfnID;
+            const dfn = document.getElementById(dfnID);
+            if(!dfn) {
+                console.log(`Can't find dfn#${dfnID}.`, panelData);
+            } else {
+                const panel = genDfnPanel(panelData);
+                append(document.body, panel);
+                insertDfnPopupAction(dfn, panel)
+            }
+        }
+    }
 
-    document.body.addEventListener("click", (e) => {
-        // If not handled already, just hide all dfn panels.
-        hideAllDfnPanels();
-    });
+    document.addEventListener("DOMContentLoaded", ()=>{
+        genAllDfnPanels();
+
+        // Add popup behavior to all dfns to show the corresponding dfn-panel.
+        var dfns = queryAll('.dfn-paneled');
+        for(let dfn of dfns) { ; }
+
+        document.body.addEventListener("click", (e) => {
+            // If not handled already, just hide all dfn panels.
+            hideAllDfnPanels();
+        });
+    })
+
 
     function hideAllDfnPanels() {
         // Turn off any currently "on" or "activated" panels.
@@ -2130,49 +1484,341 @@ response' definition.</span><b><a href="#concept-process-web-bundle-response">#c
         }
     }
 
-    function insertDfnPopupAction(dfn) {
+    function insertDfnPopupAction(dfn, dfnPanel) {
         // Find dfn panel
-        const dfnPanel = document.querySelector(`.dfn-panel[data-for='${dfn.id}']`);
-        if (dfnPanel) {
-            const panelWrapper = document.createElement('span');
-            panelWrapper.appendChild(dfnPanel);
-            panelWrapper.style.position = "relative";
-            panelWrapper.style.height = "0px";
-            dfn.insertAdjacentElement("afterend", panelWrapper);
-            dfn.setAttribute('role', 'button');
-            dfn.setAttribute('aria-expanded', 'false')
-            dfn.tabIndex = 0;
-            dfn.classList.add('has-dfn-panel');
-            dfn.addEventListener('click', (event) => {
-                showDfnPanel(dfnPanel, dfn);
+        const panelWrapper = document.createElement('span');
+        panelWrapper.appendChild(dfnPanel);
+        panelWrapper.style.position = "relative";
+        panelWrapper.style.height = "0px";
+        dfn.insertAdjacentElement("afterend", panelWrapper);
+        dfn.setAttribute('role', 'button');
+        dfn.setAttribute('aria-expanded', 'false')
+        dfn.tabIndex = 0;
+        dfn.classList.add('has-dfn-panel');
+        dfn.addEventListener('click', (event) => {
+            showDfnPanel(dfnPanel, dfn);
+            event.stopPropagation();
+        });
+        dfn.addEventListener('keypress', (event) => {
+            const kc = event.keyCode;
+            // 32->Space, 13->Enter
+            if(kc == 32 || kc == 13) {
+                toggleDfnPanel(dfnPanel, dfn);
                 event.stopPropagation();
-            });
-            dfn.addEventListener('keypress', (event) => {
-                const kc = event.keyCode;
-                // 32->Space, 13->Enter
-                if(kc == 32 || kc == 13) {
-                    toggleDfnPanel(dfnPanel, dfn);
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            });
+                event.preventDefault();
+            }
+        });
 
-            dfnPanel.addEventListener('click', (event) => {
+        dfnPanel.addEventListener('click', (event) => {
+            if (event.target.nodeName == 'A') {
                 pinDfnPanel(dfnPanel);
+            }
+            event.stopPropagation();
+        });
+
+        dfnPanel.addEventListener('keydown', (event) => {
+            if(event.keyCode == 27) { // Escape key
+                hideDfnPanel(dfnPanel, dfn);
                 event.stopPropagation();
-            });
-
-            dfnPanel.addEventListener('keydown', (event) => {
-                if(event.keyCode == 27) { // Escape key
-                    hideDfnPanel(dfnPanel, dfn);
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-            })
-
-        } else {
-            console.log("Couldn't find .dfn-panel[data-for='" + dfn.id + "']");
-        }
+                event.preventDefault();
+            }
+        })
     }
 }
 </script>
+<script>/* script-dfn-panel-json */
+window.dfnpanelData = {};
+window.dfnpanelData['37e32f12'] = {"dfnID": "37e32f12", "url": "https://console.spec.whatwg.org/#report-a-warning-to-the-console", "dfnText": "report a warning to the console", "refSections": [{"refs": [{"id": "ref-for-report-a-warning-to-the-console"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['67296a45'] = {"dfnID": "67296a45", "url": "https://w3c.github.io/webappsec-csp/#policy-self-origin", "dfnText": "self-origin", "refSections": [{"refs": [{"id": "ref-for-policy-self-origin"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-policy-self-origin\u2460"}], "title": "5.2. Monkeypatch Does response to request match source list?"}], "external": true};
+window.dfnpanelData['85394472'] = {"dfnID": "85394472", "url": "https://dom.spec.whatwg.org/#document", "dfnText": "Document", "refSections": [{"refs": [{"id": "ref-for-document"}, {"id": "ref-for-document\u2460"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['a973e0fe'] = {"dfnID": "a973e0fe", "url": "https://dom.spec.whatwg.org/#concept-document", "dfnText": "document", "refSections": [{"refs": [{"id": "ref-for-concept-document"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['5fd23811'] = {"dfnID": "5fd23811", "url": "https://dom.spec.whatwg.org/#concept-event-fire", "dfnText": "fire an event", "refSections": [{"refs": [{"id": "ref-for-concept-event-fire"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-concept-event-fire\u2460"}, {"id": "ref-for-concept-event-fire\u2461"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['81a76425'] = {"dfnID": "81a76425", "url": "https://fetch.spec.whatwg.org/#concept-response-body", "dfnText": "body", "refSections": [{"refs": [{"id": "ref-for-concept-response-body"}], "title": "6.3. Process web bundle response"}], "external": true};
+window.dfnpanelData['857d5516'] = {"dfnID": "857d5516", "url": "https://fetch.spec.whatwg.org/#concept-request-client", "dfnText": "client", "refSections": [{"refs": [{"id": "ref-for-concept-request-client"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['902380f7'] = {"dfnID": "902380f7", "url": "https://fetch.spec.whatwg.org/#concept-request-credentials-mode", "dfnText": "credentials mode", "refSections": [{"refs": [{"id": "ref-for-concept-request-credentials-mode"}, {"id": "ref-for-concept-request-credentials-mode\u2460"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-concept-request-credentials-mode\u2461"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['3f2ca4de'] = {"dfnID": "3f2ca4de", "url": "https://fetch.spec.whatwg.org/#concept-request-current-url", "dfnText": "current url", "refSections": [{"refs": [{"id": "ref-for-concept-request-current-url"}], "title": "5.1. Monkeypatch Does request match source list?"}], "external": true};
+window.dfnpanelData['3ae34c95'] = {"dfnID": "3ae34c95", "url": "https://fetch.spec.whatwg.org/#concept-request-destination", "dfnText": "destination", "refSections": [{"refs": [{"id": "ref-for-concept-request-destination"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['a33db89a'] = {"dfnID": "a33db89a", "url": "https://fetch.spec.whatwg.org/#concept-fetch", "dfnText": "fetch", "refSections": [{"refs": [{"id": "ref-for-concept-fetch"}], "title": "4.1. Monkeypatch fetch"}, {"refs": [{"id": "ref-for-concept-fetch\u2460"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['97aa4684'] = {"dfnID": "97aa4684", "url": "https://fetch.spec.whatwg.org/#fetch-params", "dfnText": "fetch params", "refSections": [{"refs": [{"id": "ref-for-fetch-params"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['9ad93b4c'] = {"dfnID": "9ad93b4c", "url": "https://fetch.spec.whatwg.org/#fetch-scheme", "dfnText": "fetch scheme", "refSections": [{"refs": [{"id": "ref-for-fetch-scheme"}], "title": "4.2. Monkeypatch fetch scheme"}], "external": true};
+window.dfnpanelData['c9e7c11a'] = {"dfnID": "c9e7c11a", "url": "https://fetch.spec.whatwg.org/#concept-header", "dfnText": "header", "refSections": [{"refs": [{"id": "ref-for-concept-header"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['6ee0eab1'] = {"dfnID": "6ee0eab1", "url": "https://fetch.spec.whatwg.org/#concept-request-header-list", "dfnText": "header list", "refSections": [{"refs": [{"id": "ref-for-concept-request-header-list"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['980528b0'] = {"dfnID": "980528b0", "url": "https://fetch.spec.whatwg.org/#concept-http-network-or-cache-fetch", "dfnText": "http-network-or-cache fetch", "refSections": [{"refs": [{"id": "ref-for-concept-http-network-or-cache-fetch"}], "title": "4.3. Monkeypatch HTTP-network-or-cache fetch"}], "external": true};
+window.dfnpanelData['6ef88ad8'] = {"dfnID": "6ef88ad8", "url": "https://fetch.spec.whatwg.org/#body-incrementally-read", "dfnText": "incrementally reading", "refSections": [{"refs": [{"id": "ref-for-body-incrementally-read"}], "title": "6.3. Process web bundle response"}], "external": true};
+window.dfnpanelData['cb98f71f'] = {"dfnID": "cb98f71f", "url": "https://fetch.spec.whatwg.org/#concept-request-mode", "dfnText": "mode", "refSections": [{"refs": [{"id": "ref-for-concept-request-mode"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['eb1b1af3'] = {"dfnID": "eb1b1af3", "url": "https://fetch.spec.whatwg.org/#concept-network-error", "dfnText": "network error", "refSections": [{"refs": [{"id": "ref-for-concept-network-error"}, {"id": "ref-for-concept-network-error\u2460"}], "title": "4.3. Monkeypatch HTTP-network-or-cache fetch"}, {"refs": [{"id": "ref-for-concept-network-error\u2461"}, {"id": "ref-for-concept-network-error\u2462"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": true};
+window.dfnpanelData['a27468c5'] = {"dfnID": "a27468c5", "url": "https://fetch.spec.whatwg.org/#ok-status", "dfnText": "ok status", "refSections": [{"refs": [{"id": "ref-for-ok-status"}], "title": "6.3. Process web bundle response"}], "external": true};
+window.dfnpanelData['bd2fe71e'] = {"dfnID": "bd2fe71e", "url": "https://fetch.spec.whatwg.org/#process-response", "dfnText": "processresponse", "refSections": [{"refs": [{"id": "ref-for-process-response"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['8c3deeef'] = {"dfnID": "8c3deeef", "url": "https://fetch.spec.whatwg.org/#concept-request-redirect-count", "dfnText": "redirect count", "refSections": [{"refs": [{"id": "ref-for-concept-request-redirect-count"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-concept-request-redirect-count\u2460"}], "title": "5.2. Monkeypatch Does response to request match source list?"}], "external": true};
+window.dfnpanelData['55213b5b'] = {"dfnID": "55213b5b", "url": "https://fetch.spec.whatwg.org/#concept-request", "dfnText": "request", "refSections": [{"refs": [{"id": "ref-for-concept-request"}], "title": "6.2. Fetching a web bundle"}, {"refs": [{"id": "ref-for-concept-request\u2460"}], "title": "6.4. Fetching subresources from a web bundle"}, {"refs": [{"id": "ref-for-concept-request\u2461"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['ee7bba09'] = {"dfnID": "ee7bba09", "url": "https://fetch.spec.whatwg.org/#concept-response", "dfnText": "response", "refSections": [{"refs": [{"id": "ref-for-concept-response"}], "title": "6.3. Process web bundle response"}, {"refs": [{"id": "ref-for-concept-response\u2460"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": true};
+window.dfnpanelData['6d1db60d'] = {"dfnID": "6d1db60d", "url": "https://fetch.spec.whatwg.org/#request-service-workers-mode", "dfnText": "service-workers mode", "refSections": [{"refs": [{"id": "ref-for-request-service-workers-mode"}], "title": "4.1. Monkeypatch fetch"}, {"refs": [{"id": "ref-for-request-service-workers-mode\u2460"}], "title": "6.2. Fetching a web bundle"}], "external": true};
+window.dfnpanelData['a1d47575'] = {"dfnID": "a1d47575", "url": "https://fetch.spec.whatwg.org/#concept-response-status", "dfnText": "status", "refSections": [{"refs": [{"id": "ref-for-concept-response-status"}], "title": "6.3. Process web bundle response"}], "external": true};
+window.dfnpanelData['dc1cd39b'] = {"dfnID": "dc1cd39b", "url": "https://fetch.spec.whatwg.org/#concept-request-url", "dfnText": "url (for request)", "refSections": [{"refs": [{"id": "ref-for-concept-request-url"}], "title": "6.2. Fetching a web bundle"}, {"refs": [{"id": "ref-for-concept-request-url\u2460"}], "title": "6.4. Fetching subresources from a web bundle"}, {"refs": [{"id": "ref-for-concept-request-url\u2461"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['3268a8eb'] = {"dfnID": "3268a8eb", "url": "https://fetch.spec.whatwg.org/#concept-response-url", "dfnText": "url (for response)", "refSections": [{"refs": [{"id": "ref-for-concept-response-url"}], "title": "5.2. Monkeypatch Does response to request match source list?"}], "external": true};
+window.dfnpanelData['ec4838d8'] = {"dfnID": "ec4838d8", "url": "https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement", "dfnText": "HTMLScriptElement", "refSections": [{"refs": [{"id": "ref-for-htmlscriptelement"}, {"id": "ref-for-htmlscriptelement\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-htmlscriptelement\u2461"}, {"id": "ref-for-htmlscriptelement\u2462"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['3349d69f'] = {"dfnID": "3349d69f", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#concept-document-window", "dfnText": "associated document", "refSections": [{"refs": [{"id": "ref-for-concept-document-window"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['c3f357e8'] = {"dfnID": "c3f357e8", "url": "https://html.spec.whatwg.org/#delay-the-load-event", "dfnText": "delay the load event", "refSections": [{"refs": [{"id": "ref-for-delay-the-load-event"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['3e12e042'] = {"dfnID": "3e12e042", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#environment-settings-object", "dfnText": "environment settings object", "refSections": [{"refs": [{"id": "ref-for-environment-settings-object"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['3327afdd'] = {"dfnID": "3327afdd", "url": "https://html.spec.whatwg.org/multipage/scripting.html#execute-the-script-element", "dfnText": "execute the script element", "refSections": [{"refs": [{"id": "ref-for-execute-the-script-element"}, {"id": "ref-for-execute-the-script-element\u2460"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}, {"id": "ref-for-in-parallel\u2460"}], "title": "3.1. Prepare the script element"}], "external": true};
+window.dfnpanelData['2b07d94d'] = {"dfnID": "2b07d94d", "url": "https://html.spec.whatwg.org/multipage/scripting.html#mark-as-ready", "dfnText": "mark as ready", "refSections": [{"refs": [{"id": "ref-for-mark-as-ready"}, {"id": "ref-for-mark-as-ready\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-mark-as-ready\u2461"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['2594e562'] = {"dfnID": "2594e562", "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#navigate", "dfnText": "navigate", "refSections": [{"refs": [{"id": "ref-for-navigate"}], "title": "4.2. Monkeypatch fetch scheme"}], "external": true};
+window.dfnpanelData['037b46da'] = {"dfnID": "037b46da", "url": "https://html.spec.whatwg.org/multipage/scripting.html#prepare-the-script-element", "dfnText": "prepare the script element", "refSections": [{"refs": [{"id": "ref-for-prepare-the-script-element"}], "title": "3. HTML monkeypatches"}, {"refs": [{"id": "ref-for-prepare-the-script-element\u2460"}, {"id": "ref-for-prepare-the-script-element\u2461"}, {"id": "ref-for-prepare-the-script-element\u2462"}, {"id": "ref-for-prepare-the-script-element\u2463"}, {"id": "ref-for-prepare-the-script-element\u2464"}, {"id": "ref-for-prepare-the-script-element\u2465"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-prepare-the-script-element\u2466"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['53079ce3'] = {"dfnID": "53079ce3", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-microtask", "dfnText": "queue a microtask", "refSections": [{"refs": [{"id": "ref-for-queue-a-microtask"}], "title": "3.3. Removing"}], "external": true};
+window.dfnpanelData['9a517a7d'] = {"dfnID": "9a517a7d", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task", "dfnText": "queue a task", "refSections": [{"refs": [{"id": "ref-for-queue-a-task"}], "title": "3.1. Prepare the script element"}], "external": true};
+window.dfnpanelData['1f67eee5'] = {"dfnID": "1f67eee5", "url": "https://html.spec.whatwg.org/multipage/scripting.html#ready-to-be-parser-executed", "dfnText": "ready to be parser-executed", "refSections": [{"refs": [{"id": "ref-for-ready-to-be-parser-executed"}], "title": "3.1. Prepare the script element"}], "external": true};
+window.dfnpanelData['04e154c5'] = {"dfnID": "04e154c5", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#report-the-exception", "dfnText": "report the exception", "refSections": [{"refs": [{"id": "ref-for-report-the-exception"}], "title": "3.2. Firing events"}], "external": true};
+window.dfnpanelData['7393da89'] = {"dfnID": "7393da89", "url": "https://html.spec.whatwg.org/multipage/browsers.html#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['66f104fd'] = {"dfnID": "66f104fd", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#set-up-a-window-environment-settings-object", "dfnText": "set up a window environment settings object", "refSections": [{"refs": [{"id": "ref-for-set-up-a-window-environment-settings-object"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['bbb5f6df'] = {"dfnID": "bbb5f6df", "url": "https://html.spec.whatwg.org/multipage/workers.html#set-up-a-worker-environment-settings-object", "dfnText": "set up a worker environment settings object", "refSections": [{"refs": [{"id": "ref-for-set-up-a-worker-environment-settings-object"}], "title": "2. Structures"}], "external": true};
+window.dfnpanelData['8ad9bc1a'] = {"dfnID": "8ad9bc1a", "url": "https://html.spec.whatwg.org/#concept-script-result", "dfnText": "the script's result", "refSections": [{"refs": [{"id": "ref-for-concept-script-result"}], "title": "3. HTML monkeypatches"}, {"refs": [{"id": "ref-for-concept-script-result\u2460"}, {"id": "ref-for-concept-script-result\u2461"}, {"id": "ref-for-concept-script-result\u2462"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-concept-script-result\u2463"}, {"id": "ref-for-concept-script-result\u2464"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-concept-script-result\u2465"}, {"id": "ref-for-concept-script-result\u2466"}, {"id": "ref-for-concept-script-result\u2467"}, {"id": "ref-for-concept-script-result\u2468"}], "title": "3.3. Removing"}], "external": true};
+window.dfnpanelData['4435c4d9'] = {"dfnID": "4435c4d9", "url": "https://html.spec.whatwg.org/#concept-script-type", "dfnText": "the script's type", "refSections": [{"refs": [{"id": "ref-for-concept-script-type"}], "title": "3. HTML monkeypatches"}, {"refs": [{"id": "ref-for-concept-script-type\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-concept-script-type\u2461"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-concept-script-type\u2462"}], "title": "3.3. Removing"}], "external": true};
+window.dfnpanelData['53275e46'] = {"dfnID": "53275e46", "url": "https://infra.spec.whatwg.org/#list-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-list-append"}, {"id": "ref-for-list-append\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-list-append\u2461"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['7f9469b5'] = {"dfnID": "7f9469b5", "url": "https://infra.spec.whatwg.org/#ascii-case-insensitive", "dfnText": "ascii case-insensitive", "refSections": [{"refs": [{"id": "ref-for-ascii-case-insensitive"}], "title": "3.1. Prepare the script element"}], "external": true};
+window.dfnpanelData['ae8def21'] = {"dfnID": "ae8def21", "url": "https://infra.spec.whatwg.org/#list-contain", "dfnText": "contain", "refSections": [{"refs": [{"id": "ref-for-list-contain"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-list-contain\u2460"}, {"id": "ref-for-list-contain\u2461"}], "title": "3.3. Removing"}, {"refs": [{"id": "ref-for-list-contain\u2462"}], "title": "6.1. Parsing"}, {"refs": [{"id": "ref-for-list-contain\u2463"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['f937b7b6'] = {"dfnID": "f937b7b6", "url": "https://infra.spec.whatwg.org/#iteration-continue", "dfnText": "continue", "refSections": [{"refs": [{"id": "ref-for-iteration-continue"}, {"id": "ref-for-iteration-continue\u2460"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['1243a891'] = {"dfnID": "1243a891", "url": "https://infra.spec.whatwg.org/#map-exists", "dfnText": "exist", "refSections": [{"refs": [{"id": "ref-for-map-exists"}, {"id": "ref-for-map-exists\u2460"}, {"id": "ref-for-map-exists\u2461"}, {"id": "ref-for-map-exists\u2462"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['16d07e10'] = {"dfnID": "16d07e10", "url": "https://infra.spec.whatwg.org/#list-iterate", "dfnText": "for each", "refSections": [{"refs": [{"id": "ref-for-list-iterate"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['4e92bc80'] = {"dfnID": "4e92bc80", "url": "https://infra.spec.whatwg.org/#map-getting-the-keys", "dfnText": "get the keys", "refSections": [{"refs": [{"id": "ref-for-map-getting-the-keys"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['c88f3887'] = {"dfnID": "c88f3887", "url": "https://infra.spec.whatwg.org/#struct-item", "dfnText": "item", "refSections": [{"refs": [{"id": "ref-for-struct-item"}, {"id": "ref-for-struct-item\u2460"}, {"id": "ref-for-struct-item\u2461"}, {"id": "ref-for-struct-item\u2462"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-struct-item\u2463"}], "title": "3. HTML monkeypatches"}], "external": true};
+window.dfnpanelData['649608b9'] = {"dfnID": "649608b9", "url": "https://infra.spec.whatwg.org/#list", "dfnText": "list", "refSections": [{"refs": [{"id": "ref-for-list"}, {"id": "ref-for-list\u2460"}, {"id": "ref-for-list\u2461"}, {"id": "ref-for-list\u2462"}, {"id": "ref-for-list\u2463"}, {"id": "ref-for-list\u2464"}, {"id": "ref-for-list\u2465"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-list\u2466"}, {"id": "ref-for-list\u2467"}, {"id": "ref-for-list\u2468"}, {"id": "ref-for-list\u2460\u24ea"}, {"id": "ref-for-list\u2460\u2460"}, {"id": "ref-for-list\u2460\u2461"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['3fca5a9e'] = {"dfnID": "3fca5a9e", "url": "https://infra.spec.whatwg.org/#ordered-map", "dfnText": "map", "refSections": [{"refs": [{"id": "ref-for-ordered-map"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['8e8decb4'] = {"dfnID": "8e8decb4", "url": "https://infra.spec.whatwg.org/#parse-a-json-string-to-an-infra-value", "dfnText": "parse json into infra values", "refSections": [{"refs": [{"id": "ref-for-parse-a-json-string-to-an-infra-value"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['99c988d6'] = {"dfnID": "99c988d6", "url": "https://infra.spec.whatwg.org/#list-remove", "dfnText": "remove", "refSections": [{"refs": [{"id": "ref-for-list-remove"}, {"id": "ref-for-list-remove\u2460"}], "title": "3.3. Removing"}], "external": true};
+window.dfnpanelData['0698d556'] = {"dfnID": "0698d556", "url": "https://infra.spec.whatwg.org/#string", "dfnText": "string", "refSections": [{"refs": [{"id": "ref-for-string"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-string\u2460"}, {"id": "ref-for-string\u2461"}, {"id": "ref-for-string\u2462"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['984221ca'] = {"dfnID": "984221ca", "url": "https://infra.spec.whatwg.org/#struct", "dfnText": "struct", "refSections": [{"refs": [{"id": "ref-for-struct"}, {"id": "ref-for-struct\u2460"}, {"id": "ref-for-struct\u2461"}, {"id": "ref-for-struct\u2462"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-struct\u2463"}], "title": "3. HTML monkeypatches"}], "external": true};
+window.dfnpanelData['959ad97b'] = {"dfnID": "959ad97b", "url": "https://url.spec.whatwg.org/#concept-url-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-url-origin"}], "title": "4.2. Monkeypatch fetch scheme"}, {"refs": [{"id": "ref-for-concept-url-origin\u2460"}, {"id": "ref-for-concept-url-origin\u2461"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['c0868016'] = {"dfnID": "c0868016", "url": "https://url.spec.whatwg.org/#concept-url-path", "dfnText": "path", "refSections": [{"refs": [{"id": "ref-for-concept-url-path"}, {"id": "ref-for-concept-url-path\u2460"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['3a711be7'] = {"dfnID": "3a711be7", "url": "https://url.spec.whatwg.org/#concept-url-scheme", "dfnText": "scheme", "refSections": [{"refs": [{"id": "ref-for-concept-url-scheme"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-concept-url-scheme\u2460"}], "title": "5.2. Monkeypatch Does response to request match source list?"}, {"refs": [{"id": "ref-for-concept-url-scheme\u2461"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['cfb25fa2'] = {"dfnID": "cfb25fa2", "url": "https://url.spec.whatwg.org/#shorten-a-urls-path", "dfnText": "shortening", "refSections": [{"refs": [{"id": "ref-for-shorten-a-urls-path"}], "title": "6.5. Finding a matching registration"}], "external": true};
+window.dfnpanelData['dcffbccd'] = {"dfnID": "dcffbccd", "url": "https://url.spec.whatwg.org/#concept-url", "dfnText": "url", "refSections": [{"refs": [{"id": "ref-for-concept-url"}, {"id": "ref-for-concept-url\u2460"}, {"id": "ref-for-concept-url\u2461"}, {"id": "ref-for-concept-url\u2462"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-concept-url\u2463"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-concept-url\u2464"}, {"id": "ref-for-concept-url\u2465"}], "title": "6.1. Parsing"}, {"refs": [{"id": "ref-for-concept-url\u2466"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": true};
+window.dfnpanelData['ca3ca4ae'] = {"dfnID": "ca3ca4ae", "url": "https://url.spec.whatwg.org/#concept-url-parser", "dfnText": "url parser", "refSections": [{"refs": [{"id": "ref-for-concept-url-parser"}, {"id": "ref-for-concept-url-parser\u2460"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['82ca3efc'] = {"dfnID": "82ca3efc", "url": "https://webidl.spec.whatwg.org/#exceptiondef-typeerror", "dfnText": "TypeError", "refSections": [{"refs": [{"id": "ref-for-exceptiondef-typeerror"}, {"id": "ref-for-exceptiondef-typeerror\u2460"}, {"id": "ref-for-exceptiondef-typeerror\u2461"}, {"id": "ref-for-exceptiondef-typeerror\u2462"}, {"id": "ref-for-exceptiondef-typeerror\u2463"}, {"id": "ref-for-exceptiondef-typeerror\u2464"}], "title": "6.1. Parsing"}], "external": true};
+window.dfnpanelData['fetched-web-bundle'] = {"dfnID": "fetched-web-bundle", "url": "#fetched-web-bundle", "dfnText": "fetched web bundle", "refSections": [{"refs": [{"id": "ref-for-fetched-web-bundle"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-fetched-web-bundle\u2460"}], "title": "3.2. Firing events"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry'] = {"dfnID": "web-bundle-fetch-entry", "url": "#web-bundle-fetch-entry", "dfnText": "web bundle fetch entry", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry"}, {"id": "ref-for-web-bundle-fetch-entry\u2460"}, {"id": "ref-for-web-bundle-fetch-entry\u2461"}, {"id": "ref-for-web-bundle-fetch-entry\u2462"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry\u2463"}, {"id": "ref-for-web-bundle-fetch-entry\u2464"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry\u2465"}], "title": "6.2. Fetching a web bundle"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry\u2466"}], "title": "6.3. Process web bundle response"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry\u2467"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry-source'] = {"dfnID": "web-bundle-fetch-entry-source", "url": "#web-bundle-fetch-entry-source", "dfnText": "source", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry-source"}, {"id": "ref-for-web-bundle-fetch-entry-source\u2460"}, {"id": "ref-for-web-bundle-fetch-entry-source\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-source\u2462"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-source\u2463"}], "title": "5.2. Monkeypatch Does response to request match source list?"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-source\u2464"}], "title": "6.2. Fetching a web bundle"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-source\u2465"}, {"id": "ref-for-web-bundle-fetch-entry-source\u2466"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry-credentials'] = {"dfnID": "web-bundle-fetch-entry-credentials", "url": "#web-bundle-fetch-entry-credentials", "dfnText": "credentials", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry-credentials"}, {"id": "ref-for-web-bundle-fetch-entry-credentials\u2460"}, {"id": "ref-for-web-bundle-fetch-entry-credentials\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-credentials\u2462"}], "title": "6.2. Fetching a web bundle"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry-state'] = {"dfnID": "web-bundle-fetch-entry-state", "url": "#web-bundle-fetch-entry-state", "dfnText": "state", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry-state"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-state\u2460"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2461"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2462"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-state\u2463"}], "title": "6.2. Fetching a web bundle"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-state\u2464"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2465"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2466"}], "title": "6.3. Process web bundle response"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-state\u2467"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2468"}, {"id": "ref-for-web-bundle-fetch-entry-state\u2460\u24ea"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry-fetched-bundle'] = {"dfnID": "web-bundle-fetch-entry-fetched-bundle", "url": "#web-bundle-fetch-entry-fetched-bundle", "dfnText": "fetched bundle", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry-fetched-bundle"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2460"}], "title": "3.3. Removing"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2461"}, {"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2462"}], "title": "6.3. Process web bundle response"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2463"}, {"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2464"}, {"id": "ref-for-web-bundle-fetch-entry-fetched-bundle\u2465"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": false};
+window.dfnpanelData['web-bundle-fetch-entry-used-by-a-registration'] = {"dfnID": "web-bundle-fetch-entry-used-by-a-registration", "url": "#web-bundle-fetch-entry-used-by-a-registration", "dfnText": "used\nby a registration", "refSections": [{"refs": [{"id": "ref-for-web-bundle-fetch-entry-used-by-a-registration"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-fetch-entry-used-by-a-registration\u2460"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['bundle-rule'] = {"dfnID": "bundle-rule", "url": "#bundle-rule", "dfnText": "bundle rule", "refSections": [{"refs": [{"id": "ref-for-bundle-rule"}, {"id": "ref-for-bundle-rule\u2460"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-bundle-rule\u2461"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['bundle-rule-resources'] = {"dfnID": "bundle-rule-resources", "url": "#bundle-rule-resources", "dfnText": "resources", "refSections": [{"refs": [{"id": "ref-for-bundle-rule-resources"}], "title": "6.1. Parsing"}, {"refs": [{"id": "ref-for-bundle-rule-resources\u2460"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['bundle-rule-scopes'] = {"dfnID": "bundle-rule-scopes", "url": "#bundle-rule-scopes", "dfnText": "scopes", "refSections": [{"refs": [{"id": "ref-for-bundle-rule-scopes"}], "title": "6.1. Parsing"}, {"refs": [{"id": "ref-for-bundle-rule-scopes\u2460"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['web-bundle-registration'] = {"dfnID": "web-bundle-registration", "url": "#web-bundle-registration", "dfnText": "web bundle registration", "refSections": [{"refs": [{"id": "ref-for-web-bundle-registration"}, {"id": "ref-for-web-bundle-registration\u2460"}, {"id": "ref-for-web-bundle-registration\u2461"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-web-bundle-registration\u2462"}], "title": "3. HTML monkeypatches"}, {"refs": [{"id": "ref-for-web-bundle-registration\u2463"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-registration\u2464"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['web-bundle-registration-fetch-entry'] = {"dfnID": "web-bundle-registration-fetch-entry", "url": "#web-bundle-registration-fetch-entry", "dfnText": "fetch entry", "refSections": [{"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2460"}, {"id": "ref-for-web-bundle-registration-fetch-entry\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2462"}, {"id": "ref-for-web-bundle-registration-fetch-entry\u2463"}, {"id": "ref-for-web-bundle-registration-fetch-entry\u2464"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2465"}], "title": "3.3. Removing"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2466"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2467"}], "title": "5.2. Monkeypatch Does response to request match source list?"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2468"}], "title": "6.4. Fetching subresources from a web bundle"}, {"refs": [{"id": "ref-for-web-bundle-registration-fetch-entry\u2460\u24ea"}, {"id": "ref-for-web-bundle-registration-fetch-entry\u2460\u2460"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['web-bundle-registration-rule'] = {"dfnID": "web-bundle-registration-rule", "url": "#web-bundle-registration-rule", "dfnText": "rule", "refSections": [{"refs": [{"id": "ref-for-web-bundle-registration-rule"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-registration-rule\u2460"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['web-bundle-parse-result'] = {"dfnID": "web-bundle-parse-result", "url": "#web-bundle-parse-result", "dfnText": "web bundle parse result", "refSections": [{"refs": [{"id": "ref-for-web-bundle-parse-result"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['web-bundle-parse-result-source'] = {"dfnID": "web-bundle-parse-result-source", "url": "#web-bundle-parse-result-source", "dfnText": "source", "refSections": [{"refs": [{"id": "ref-for-web-bundle-parse-result-source"}, {"id": "ref-for-web-bundle-parse-result-source\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-parse-result-source\u2461"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['web-bundle-parse-result-credentials'] = {"dfnID": "web-bundle-parse-result-credentials", "url": "#web-bundle-parse-result-credentials", "dfnText": "credentials", "refSections": [{"refs": [{"id": "ref-for-web-bundle-parse-result-credentials"}, {"id": "ref-for-web-bundle-parse-result-credentials\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-parse-result-credentials\u2461"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['web-bundle-parse-result-rule'] = {"dfnID": "web-bundle-parse-result-rule", "url": "#web-bundle-parse-result-rule", "dfnText": "rule", "refSections": [{"refs": [{"id": "ref-for-web-bundle-parse-result-rule"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-parse-result-rule\u2460"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['environment-settings-object-web-bundle-registration-list'] = {"dfnID": "environment-settings-object-web-bundle-registration-list", "url": "#environment-settings-object-web-bundle-registration-list", "dfnText": "web bundle registration list", "refSections": [{"refs": [{"id": "ref-for-environment-settings-object-web-bundle-registration-list"}, {"id": "ref-for-environment-settings-object-web-bundle-registration-list\u2460"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-environment-settings-object-web-bundle-registration-list\u2461"}], "title": "6.5. Finding a matching registration"}], "external": false};
+window.dfnpanelData['document-web-bundle-registration-list'] = {"dfnID": "document-web-bundle-registration-list", "url": "#document-web-bundle-registration-list", "dfnText": "web bundle registration list", "refSections": [{"refs": [{"id": "ref-for-document-web-bundle-registration-list"}, {"id": "ref-for-document-web-bundle-registration-list\u2460"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-document-web-bundle-registration-list\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-document-web-bundle-registration-list\u2462"}, {"id": "ref-for-document-web-bundle-registration-list\u2463"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['document-web-bundle-fetch-entry-list'] = {"dfnID": "document-web-bundle-fetch-entry-list", "url": "#document-web-bundle-fetch-entry-list", "dfnText": "web bundle fetch entry list", "refSections": [{"refs": [{"id": "ref-for-document-web-bundle-fetch-entry-list"}], "title": "2. Structures"}, {"refs": [{"id": "ref-for-document-web-bundle-fetch-entry-list\u2460"}, {"id": "ref-for-document-web-bundle-fetch-entry-list\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-document-web-bundle-fetch-entry-list\u2462"}, {"id": "ref-for-document-web-bundle-fetch-entry-list\u2463"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['web-bundle-result'] = {"dfnID": "web-bundle-result", "url": "#web-bundle-result", "dfnText": "web bundle result", "refSections": [{"refs": [{"id": "ref-for-web-bundle-result"}, {"id": "ref-for-web-bundle-result\u2460"}], "title": "3. HTML monkeypatches"}, {"refs": [{"id": "ref-for-web-bundle-result\u2461"}, {"id": "ref-for-web-bundle-result\u2462"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-result\u2463"}, {"id": "ref-for-web-bundle-result\u2464"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-web-bundle-result\u2465"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['web-bundle-result-registration'] = {"dfnID": "web-bundle-result-registration", "url": "#web-bundle-result-registration", "dfnText": "registration", "refSections": [{"refs": [{"id": "ref-for-web-bundle-result-registration"}, {"id": "ref-for-web-bundle-result-registration\u2460"}, {"id": "ref-for-web-bundle-result-registration\u2461"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-result-registration\u2462"}, {"id": "ref-for-web-bundle-result-registration\u2463"}, {"id": "ref-for-web-bundle-result-registration\u2464"}, {"id": "ref-for-web-bundle-result-registration\u2465"}, {"id": "ref-for-web-bundle-result-registration\u2466"}], "title": "3.2. Firing events"}, {"refs": [{"id": "ref-for-web-bundle-result-registration\u2467"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['web-bundle-result-error-to-rethrow'] = {"dfnID": "web-bundle-result-error-to-rethrow", "url": "#web-bundle-result-error-to-rethrow", "dfnText": "error to rethrow", "refSections": [{"refs": [{"id": "ref-for-web-bundle-result-error-to-rethrow"}, {"id": "ref-for-web-bundle-result-error-to-rethrow\u2460"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-web-bundle-result-error-to-rethrow\u2461"}, {"id": "ref-for-web-bundle-result-error-to-rethrow\u2462"}, {"id": "ref-for-web-bundle-result-error-to-rethrow\u2463"}], "title": "3.2. Firing events"}], "external": false};
+window.dfnpanelData['prepare-a-web-bundle'] = {"dfnID": "prepare-a-web-bundle", "url": "#prepare-a-web-bundle", "dfnText": "prepare a web bundle", "refSections": [{"refs": [{"id": "ref-for-prepare-a-web-bundle"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-prepare-a-web-bundle\u2460"}], "title": "3.3. Removing"}], "external": false};
+window.dfnpanelData['process-events-for-a-web-bundle'] = {"dfnID": "process-events-for-a-web-bundle", "url": "#process-events-for-a-web-bundle", "dfnText": "process events for a web bundle", "refSections": [{"refs": [{"id": "ref-for-process-events-for-a-web-bundle"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-process-events-for-a-web-bundle\u2460"}], "title": "3.2. Firing events"}], "external": false};
+window.dfnpanelData['parse-a-web-bundle-string'] = {"dfnID": "parse-a-web-bundle-string", "url": "#parse-a-web-bundle-string", "dfnText": "parse a web bundle string", "refSections": [{"refs": [{"id": "ref-for-parse-a-web-bundle-string"}], "title": "3.1. Prepare the script element"}], "external": false};
+window.dfnpanelData['parse-a-url-list'] = {"dfnID": "parse-a-url-list", "url": "#parse-a-url-list", "dfnText": "parse a URL list", "refSections": [{"refs": [{"id": "ref-for-parse-a-url-list"}, {"id": "ref-for-parse-a-url-list\u2460"}], "title": "6.1. Parsing"}], "external": false};
+window.dfnpanelData['fetch-a-web-bundle'] = {"dfnID": "fetch-a-web-bundle", "url": "#fetch-a-web-bundle", "dfnText": "fetch a web bundle", "refSections": [{"refs": [{"id": "ref-for-fetch-a-web-bundle"}], "title": "3.1. Prepare the script element"}, {"refs": [{"id": "ref-for-fetch-a-web-bundle\u2460"}], "title": "3.2. Firing events"}], "external": false};
+window.dfnpanelData['concept-process-web-bundle-response'] = {"dfnID": "concept-process-web-bundle-response", "url": "#concept-process-web-bundle-response", "dfnText": "process web bundle\nresponse", "refSections": [{"refs": [{"id": "ref-for-concept-process-web-bundle-response"}], "title": "6.2. Fetching a web bundle"}], "external": false};
+window.dfnpanelData['fetch-a-subresource-from-web-bundle'] = {"dfnID": "fetch-a-subresource-from-web-bundle", "url": "#fetch-a-subresource-from-web-bundle", "dfnText": "fetch a subresource from web bundle", "refSections": [{"refs": [{"id": "ref-for-fetch-a-subresource-from-web-bundle"}], "title": "4.3. Monkeypatch HTTP-network-or-cache fetch"}], "external": false};
+window.dfnpanelData['get-response-from-web-bundle-fetch-entry'] = {"dfnID": "get-response-from-web-bundle-fetch-entry", "url": "#get-response-from-web-bundle-fetch-entry", "dfnText": "get response from web bundle fetch entry", "refSections": [{"refs": [{"id": "ref-for-get-response-from-web-bundle-fetch-entry"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": false};
+window.dfnpanelData['find-a-matching-web-bundle-registration'] = {"dfnID": "find-a-matching-web-bundle-registration", "url": "#find-a-matching-web-bundle-registration", "dfnText": "find a matching web bundle registration", "refSections": [{"refs": [{"id": "ref-for-find-a-matching-web-bundle-registration"}], "title": "4.1. Monkeypatch fetch"}, {"refs": [{"id": "ref-for-find-a-matching-web-bundle-registration\u2460"}], "title": "5.1. Monkeypatch Does request match source list?"}, {"refs": [{"id": "ref-for-find-a-matching-web-bundle-registration\u2461"}], "title": "5.2. Monkeypatch Does response to request match source list?"}, {"refs": [{"id": "ref-for-find-a-matching-web-bundle-registration\u2462"}], "title": "6.4. Fetching subresources from a web bundle"}], "external": false};</script>
+<script>/* script-dom-helper */
+function query(sel) { return document.querySelector(sel); }
+
+function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+function iter(obj) {
+	if(!obj) return [];
+	var it = obj[Symbol.iterator];
+	if(it) return it;
+	return Object.entries(obj);
+}
+
+function mk(tagname, attrs, ...children) {
+	const el = document.createElement(tagname);
+	for(const [k,v] of iter(attrs)) {
+		if(k.slice(0,3) == "_on") {
+			const eventName = k.slice(3);
+			el.addEventListener(eventName, v);
+		} else if(k[0] == "_") {
+			// property, not attribute
+			el[k.slice(1)] = v;
+		} else {
+			if(v === false || v == null) {
+        continue;
+      } else if(v === true) {
+        el.setAttribute(k, "");
+        continue;
+      } else {
+  			el.setAttribute(k, v);
+      }
+		}
+	}
+	append(el, children);
+	return el;
+}
+
+/* Create shortcuts for every known HTML element */
+[
+  "a",
+  "abbr",
+  "acronym",
+  "address",
+  "applet",
+  "area",
+  "article",
+  "aside",
+  "audio",
+  "b",
+  "base",
+  "basefont",
+  "bdo",
+  "big",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "center",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "datalist",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "embed",
+  "fieldset",
+  "figcaption",
+  "figure",
+  "font",
+  "footer",
+  "form",
+  "frame",
+  "frameset",
+  "head",
+  "header",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "link",
+  "main",
+  "map",
+  "mark",
+  "meta",
+  "meter",
+  "nav",
+  "nobr",
+  "noscript",
+  "object",
+  "ol",
+  "optgroup",
+  "option",
+  "output",
+  "p",
+  "param",
+  "pre",
+  "progress",
+  "q",
+  "s",
+  "samp",
+  "script",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strike",
+  "strong",
+  "style",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "time",
+  "title",
+  "tr",
+  "u",
+  "ul",
+  "var",
+  "video",
+  "wbr",
+  "xmp",
+].forEach(tagname=>{
+	mk[tagname] = (...args) => mk(tagname, ...args);
+});
+
+function* nodesFromChildList(children) {
+	for(const child of children.flat(Infinity)) {
+		if(child instanceof Node) {
+			yield child;
+		} else {
+			yield new Text(child);
+		}
+	}
+}
+function append(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		if(el instanceof Node) el.appendChild(child);
+		else el.push(child);
+	}
+	return el;
+}
+
+function insertAfter(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		el.parentNode.insertBefore(child, el.nextSibling);
+	}
+	return el;
+}
+
+function clearContents(el) {
+	el.innerHTML = "";
+	return el;
+}
+
+function parseHTML(markup) {
+	if(markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+		const doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = markup;
+		return doc;
+	} else {
+		const el = mk.template({});
+		el.innerHTML = markup;
+		return el.content;
+	}
+}</script>
